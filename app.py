@@ -12,8 +12,13 @@ import sqlite3
 
 
 app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'Instance', 'site.db')
+app.config['SECRET_KEY'] = 'your_secret_key'
+db = SQLAlchemy(app)
 
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST' :
         username = request.form['username']
@@ -22,7 +27,18 @@ def login():
     
     return render_template('login.html')
 
+def is_logged_in():
+    return 'user_id' in session
+
+@app.route('/')
+def index():
+    if not is_logged_in():
+        return redirect(url_for('login'))
+    #user = User.query.get(session['user_id'])
+
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     # APP.run(host='0.0.0.0', port=5000, debug=True)
     app.run(debug=True)
