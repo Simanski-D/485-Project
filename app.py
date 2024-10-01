@@ -1,44 +1,72 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, request
-import sys
-from werkzeug.security import check_password_hash
-from datetime import datetime
-from werkzeug.security import generate_password_hash
-from flask_sqlalchemy import SQLAlchemy
-from datetime import date
-import re
+from flask import Flask, render_template, request, redirect, url_for, flash
+import hashlib
 import os
-import sqlite3
-
+import mysql.connector
 
 
 app = Flask(__name__)
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'Instance', 'site.db')
-app.config['SECRET_KEY'] = 'your_secret_key'
-db = SQLAlchemy(app)
+app.secret_key = 'dummy_key'  
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST' :
-        username = request.form['username']
-        password = request.form['password']
-        return f"logged in as {username}"
-    
-    return render_template('login.html')
-
-def is_logged_in():
-    return 'user_id' in session
+# Database connection parameters
+DB_CONFIG = {
+    'host': "wayne.cs.uwec.edu",
+    'user': "DENNERKW5831",  
+    'password': "7Q155UGZ",  
+    'database': "cs485group1", 
+    'port': "3306"  
+}
 
 @app.route('/')
-def index():
-    if not is_logged_in():
-        return redirect(url_for('login'))
-    #user = User.query.get(session['user_id'])
+def home():
+    return render_template('index.html')
 
+@app.route('/create_account', methods=['POST'])
+def create_account():
+
+    username = request.form['username']
+    password = request.form['password']
+    
+    # Add database insertion logic
+    connection = mysql.connector.connect(**DB_CONFIG)
+    cursor = connection.cursor()
+
+    try:
+        # Check if the username already exists
+        cursor.execute("SELECT COUNT(*) FROM user_info WHERE email = %s", (username,))
+        count = cursor.fetchone()[0]
+
+        if count > 0:
+            # Username already exists
+            flash('Username already exists! Please choose a different username.', 'error')
+            return redirect(url_for('home'))  # Redirect back to home if the username exists
+
+        # If the username is not taken, proceed with account creation
+        iterations = 100000
+        key_length = 32
+
+        salt = os.urandom(32)
+        password_bytes = password.encode("utf-8")
+        hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt, iterations, dklen=key_length)
+
+        # Store user in database
+        cursor.execute("INSERT INTO user_info (email, hashed_key, salt) VALUES (%s, %s, %s)", (username, hashed_password.hex(), salt.hex()))
+        connection.commit()
+        flash('Account created successfully!', 'success')
+        
+        # Redirect to the homepage after account creation
+        return redirect(url_for('homepage'))
+
+    except mysql.connector.Error as err:
+        flash(f'Error: {err}', 'error')
+        return redirect(url_for('home'))  # Redirect back to home on error
+    finally:
+        cursor.close()
+        connection.close()
+
+@app.route('/homepage')
+def homepage():
+    return render_template('homepage.html') 
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    # APP.run(host='0.0.0.0', port=5000, debug=True)
     app.run(debug=True)
