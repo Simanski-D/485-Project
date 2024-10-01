@@ -3,7 +3,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Simple Webpage Layout</title>
-        <link rel="stylesheet" href="crude.css" type="text/css"></linkrel>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/crude.css')}}" type="text/css"></linkrel>
     </header>
     <body>
         <header>
@@ -21,7 +21,7 @@
         <div class="container">
             <div class="left-container">
                 <center><h2>Login</h2></center>
-                <center><form action="#" method="post">
+                <center><form action="#" method="POST">
                     <label for="username">Username</label><br>
                     <input type="text" id="username" name="username" placeholder="Enter your username" required>
                     <br>
@@ -33,7 +33,7 @@
             </div>
             <div class="right-container">
                 <center><h2>Create Account</h2></center>
-                <center><form action="#" method="post">
+                <center><form action="#" method="POST">
                     <label for="username">Enter Username</label><br>
                     <input type="text" id="username" name="username" placeholder="Enter your username" required>
                     <br>
@@ -45,6 +45,11 @@
                     <br>
                     <label for="password">Re-Enter Password</label><br>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <br>
+                    <label for="email">Enter Email</label><br>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <label for="email">Re-Enter Email</label><br>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
                     <br>
                     <input type="submit" value="Login">
                 </form></center>
