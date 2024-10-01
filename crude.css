@@ -12,11 +12,16 @@ header {
     background-color: #264759;
     color: white;
     text-align: center;
-    padding: 1rem;
+    height: 7%;
+    width: 100%;
 }
 
 nav {
     background-color: #333;
+    height: 100%;
+    width: 160px;
+    top: 0;
+    left: 0;
 }
 
 nav ul {
