@@ -12,83 +12,95 @@ import mysql.connector
 from mysql.connector import Error
 
 
-
 app = Flask(__name__)
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.secret_key = 'dummy_key'  
 
-#method that establishes connection to MySQL server - user=root for now...
+
+# Database connection parameters + method
 def create_connection():
-    try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="", #input password
-            database="ec_mysql.cs485"
-        )
-        if connection.is_connected():
-            print("Successfully connected")
-            return connection
-    except Error as e:
-        print(f"The error '{e}' occured")
-        return None
+        connection = None
 
-#method to be used in signup page to create account with hashed and salted password. Stores user info and salt in DB.
-@app.route('/signup', methods=['GET', 'POST'])
-def account_creation():
+        try:
+            connection = mysql.connector.connect(
+    
+            host = "wayne.cs.uwec.edu",
+            user = "DENNERKW5831",
+            password = "7Q155UGZ",  
+            database = "cs485group1",
+            port = "3306"  
+            )
+            if connection.is_connected():
+                print("Successfully connected to the database")
+        except Error as e:
+            print(f"The error '{e}' occurred")
+        return connection
+
+@app.route('/')
+def index():
+    if not is_logged_in():
+        return redirect(url_for('login'))
+    #user = User.query.get(session['user_id'])
+
+def is_logged_in() :
+    return 'user_id' in session
+
+@app.route('/create_account', methods=['POST','GET'])
+def create_account():
     if request.method == 'POST':
+
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
 
-
-        connection = create_connection()
+        connection = connection.cursor()
         if connection is None:
-            return
-        
+            flash('Database connection failed', 'error')
+            return redirect(url_for('login'))
+        #cursor = None
+    try:
+            
         cursor = connection.cursor()
+    
+        # Add database insertion logic
+        #connection = mysql.connector.connect(**DB_CONFIG)
 
-        #link to html boxes with button
-        user = input("Create a username:\n")
-        email = input("Add your email:\n")
-        pword = input("Create a password:\n")
-
-        
-        #check if username and/or is taken in database
-        cursor.execute("SELECT COUNT(*) FROM users WHERE username = %s", (user,))
+          #check if username and/or is taken in database
+        cursor.execute("SELECT COUNT(*) FROM user_info WHERE username = %s", (user,))
         if cursor.fetchone()[0] > 0:
-            print("This username is already being used")
+            flash('Username already exists! Please choose a different username.', 'error')
             connection.close()
-            return
+            return redirect(url_for('login'))
         
-        cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
+        cursor.execute("SELECT COUNT(*) FROM user_info WHERE email = %s", (email,))
         if cursor.fetchone()[0] > 0:
-            print("This email is already being used")
+            flash('Username already exists! Please choose a different username.', 'error')
             connection.close()
-            return
+            return redirect(url_for('login'))
 
-
-        iterations = 100000 #more is more secure
-        key_length = 32 
+        # If the username is not taken, proceed with account creation
+        iterations = 100000
+        key_length = 32
+    
         salt = os.urandom(32)
-        pword_bytes = pword.encode("utf-8") 
-        hashed_pword = hashlib.pbkdf2_hmac('sha256', pword_bytes, salt, iterations, dklen = key_length)
-
-        cursor.execute("Insert into users (username, email, hashed_key, salt) values (%s, %s, %s, %s)", (user, email, hashed_pword.hex(), salt.hex()))
+        password_bytes = password.encode("utf-8")
+        hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt, iterations, dklen=key_length)
+    
+        # Store user in database
+        cursor.execute("INSERT INTO user_info (username, email, hashed_key, salt) VALUES (%s, %s, %s)", (username, email, hashed_password.hex(), salt.hex()))
         connection.commit()
-        cursor.close()
-        connection.close()
+        flash('Account created successfully!', 'success')
 
-    # print(f'Salt: {salt.hex()}') 
-    # print(f'Hashed password: {hashed_pword.hex()}')  #prints hashed password in hex instead of bytes
+    except mysql.connector.Error as err:
+            flash(f'Error: {err}', 'error')
+            return redirect(url_for('login'))  # Redirect back to home on error
+    finally:
+            cursor.close()
+            connection.close()
+        
+        # Redirect to the homepage after account creation
+    return render_template(url_for('CreateAccount.html'))
 
-        #displays success message to user
-        flash('Account successfully created', 'success')
-        return redirect(url_for('login')) 
-    return render_template('crudeLogIn.html')
 
-
-#check username, password against DB with salt and hash
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST' :
@@ -98,16 +110,5 @@ def login():
     
     return render_template('CrudeLogIn.html')
 
-def is_logged_in():
-    return 'user_id' in session
-
-@app.route('/')
-def index():
-    if not is_logged_in():
-        return redirect(url_for('login'))
-    #user = User.query.get(session['user_id'])
-
-
-if __name__ == '__main__':    
-    # APP.run(host='0.0.0.0', port=5000, debug=True)
+if __name__ == '__main__':
     app.run(debug=True)
