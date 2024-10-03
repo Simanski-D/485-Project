@@ -43,6 +43,18 @@ h2 {
 
 p, .input {
     font-family: 'Nunito';
+    color: white;
+
+}
+
+.createAcc {
+    font-family: 'Nunito';
+    color: white;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
 }
 
 nav {
@@ -98,7 +110,7 @@ nav ul li a:hover {
     background-color: 264759;
     color: white;
     padding-top: 10px;
-    padding-bottom: 25px;
+    padding-bottom: 5px;
     padding-right: 35px;
     padding-left: 35px;
     border-radius: 8px;
