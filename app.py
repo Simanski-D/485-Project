@@ -19,10 +19,13 @@ DB_CONFIG = {
 
 @app.route('/')
 def home():
-    return render_template('crudeLogin.html')
+    return render_template('login.html')
 
-@app.route('/create_account', methods=['POST'])
+@app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
+    if request.method == 'POST' :
+        return render_template('CreateAccount.html')
+
     if request.method == 'POST' :
 
         email = request.form['email']
@@ -68,7 +71,7 @@ def create_account():
 
 @app.route('/homepage')
 def homepage():
-    return render_template('crudeFrontEnd.html') 
+    return render_template('dashboard.html') 
 
 if __name__ == '__main__':
     app.run(debug=True)
