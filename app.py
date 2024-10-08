@@ -18,18 +18,15 @@ DB_CONFIG = {
 }
 
 @app.route('/')
-def home():
+def login():
     return render_template('login.html')
 
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
     if request.method == 'POST' :
-        return render_template('CreateAccount.html')
 
-    if request.method == 'POST' :
-
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get('email')
+        password = request.form.get('pw_key')
         
         # Add database insertion logic
         connection = mysql.connector.connect(**DB_CONFIG)
@@ -37,14 +34,15 @@ def create_account():
 
         try:
             # Check if the username already exists
-            cursor.execute("SELECT COUNT(*) FROM user_info WHERE email = %s", (email,))
-            count = cursor.fetchone()[0]
+            cursor.execute("SELECT * FROM user_info WHERE email = %s", (email,))
+            count = cursor.fetchone()
 
-            if count > 0:
+            if count is not None:
                 # Username already exists
-                flash('Email already exists! Please choose a different email.', 'error')
-                return redirect(url_for('/'))  # Redirect back to home if the username exists
-
+                flash("An account with this email already exists.")
+                return redirect(url_for('login'))  # Redirect back to home if the username exists
+            
+        
             # If the username is not taken, proceed with account creation
             iterations = 100000
             key_length = 32
@@ -54,24 +52,14 @@ def create_account():
             hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt, iterations, dklen=key_length)
 
             # Store user in database
-            cursor.execute("INSERT INTO user_info (email, hashed_key, salt) VALUES (%s, %s, %s)", (email, hashed_password.hex(), salt.hex()))
+            cursor.execute("INSERT INTO user_info (email, salt, pw_key) VALUES (%s, %s, %s)", (email, salt.hex(), hashed_password.hex()))
             connection.commit()
-            flash('Account created successfully!', 'success')
-            
-            # Redirect to the homepage after account creation
-            return redirect(url_for('homepage'))
 
-        except mysql.connector.Error as err:
-            flash(f'Error: {err}', 'error')
-            return redirect(url_for('home'))  # Redirect back to home on error
         finally:
             cursor.close()
             connection.close()
-    return render_template('CreateAccount.html')
 
-@app.route('/homepage')
-def homepage():
-    return render_template('dashboard.html') 
+    return render_template('createAccount.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
