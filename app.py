@@ -17,10 +17,10 @@ DB_CONFIG = {
     'port': "3306"  
 }
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def login():
     return render_template('login.html')
-
+#change
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
     if request.method == 'POST' :
@@ -54,6 +54,7 @@ def create_account():
             # Store user in database
             cursor.execute("INSERT INTO user_info (email, salt, pw_key) VALUES (%s, %s, %s)", (email, salt.hex(), hashed_password.hex()))
             connection.commit()
+            return redirect(url_for('login'))
 
         finally:
             cursor.close()
