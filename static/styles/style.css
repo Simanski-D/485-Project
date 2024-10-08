@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Work Sans');
+
 header {
     display: flex;
     justify-content: space-between;
@@ -30,10 +33,15 @@ footer {
 h1 {
     color: white;
     font-family: 'Work Sans';
+    font-size: 20pt;
 }
 
 header h1 {
-    padding-left: 40px;
+    padding-left: 20px;
+}
+
+.right-header-item {
+    padding-right: 20px;
 }
 
 h2 {
@@ -43,12 +51,24 @@ h2 {
 
 p, .input {
     font-family: 'Nunito';
+    color: white;
+
+}
+
+.createAcc {
+    font-family: 'Nunito';
+    color: white;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
 }
 
 nav {
     background-color: #264759;
     height: 100%;
-    width: 100px;
+    width: 125px;
     top: 0;
     left: 0;
 }
@@ -60,6 +80,7 @@ nav ul {
 
 nav ul li {
     display: inline;
+    font-family: 'Work Sans';
 }
 
 nav ul li a {
@@ -81,8 +102,9 @@ nav ul li a:hover {
     padding: 20px;
 }
 
-.main-container {
-    width: 28%;
+.center-container {
+    width: 350px;
+    position: fixed;
 }
 
 .left-container,
@@ -94,11 +116,11 @@ nav ul li a:hover {
     border: 1px solid #396B86;
 }
 
-.center-container{
+.form-container{
     background-color: 264759;
     color: white;
     padding-top: 10px;
-    padding-bottom: 25px;
+    padding-bottom: 5px;
     padding-right: 35px;
     padding-left: 35px;
     border-radius: 8px;
@@ -108,7 +130,7 @@ nav ul li a:hover {
     color: #1C1D22;
 }
 
-.center-container .input-box {
+.form-container .input-box {
     width: 100%;
     height: 30px;
     background: #DFDFDF;
@@ -132,7 +154,7 @@ nav ul li a:hover {
     padding-bottom: 10px;
 }
 
-.center-container .button {
+.form-container .button {
     width: 80%;
     height: 35px;
     background: #E9CC7C;
