@@ -27,6 +27,17 @@ def create_account():
 
         email = request.form.get('email')
         password = request.form.get('pw_key')
+        confirm_password = request.form.get('confirm_pw')
+        
+
+        if not email.endswith("@uwec.edu"):
+            flash("Email must end with @uwec.edu")
+            return redirect(url_for('create_account'))
+        
+        if password != confirm_password:
+            flash("Passwords do not match")  # Flash the message
+            return redirect(url_for('create_account'))
+        
         
         # Add database insertion logic
         connection = mysql.connector.connect(**DB_CONFIG)
