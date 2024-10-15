@@ -27,6 +27,7 @@ def create_account():
 
         email = request.form.get('email')
         password = request.form.get('pw_key')
+        confirm_password = request.form.get('confirm_pw')
         
         # Add database insertion logic
         connection = mysql.connector.connect(**DB_CONFIG)
@@ -39,10 +40,16 @@ def create_account():
 
             if count is not None:
                 # Username already exists
-                flash("An account with this email already exists.")
+                flash('An account with this email already exists.', 'error')
                 return redirect(url_for('login'))  # Redirect back to home if the username exists
             
-        
+
+            if password != confirm_password:
+                #passwords don't match
+                flash('Your two password entries do not match!', 'error')
+                return redirect(url_for('create_account'))
+
+
             # If the username is not taken, proceed with account creation
             iterations = 100000
             key_length = 32
