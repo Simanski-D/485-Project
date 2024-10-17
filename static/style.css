@@ -154,6 +154,21 @@ nav ul li a:hover {
     padding-bottom: 10px;
 }
 
+/*Buttons*/
+header .button {
+    width: 5%;
+    height: 35px;
+    background: none;
+    color: white;
+    border: none;
+    outline: none;
+    font-family: 'Nunito';
+    font-size: medium;
+    margin-left: 10%;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
 .form-container .button {
     width: 80%;
     height: 35px;
