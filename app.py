@@ -19,7 +19,47 @@ DB_CONFIG = {
 
 @app.route('/', methods=['POST', 'GET'])
 def login():
+
+    if request.method == 'POST':
+        email = request.form.get('username')
+        password = request.form.get('password')
+
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+
+        try:
+            # Query the database to check if the user exists
+            cursor.execute("SELECT email, salt, pw_key FROM user_info WHERE email = %s", (email,))
+            result = cursor.fetchone()
+
+            if result is None:
+                # If no user is found, flash a message
+                flash("Invalid email or password")
+                return redirect(url_for('login'))
+
+            db_email, db_salt, db_hashed_password = result
+
+            # Hash the provided password with the stored salt
+            password_bytes = password.encode('utf-8')
+            salt_bytes = bytes.fromhex(db_salt)
+            hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt_bytes, 100000, dklen=32)
+
+            # Compare the hashed password with the one in the database
+            if hashed_password.hex() == db_hashed_password:
+                # Redirect to the dashboard upon successful login
+                return redirect(url_for('dashboard'))
+            else:
+                # If the password is incorrect, flash a message
+                flash("Invalid email or password")
+                return redirect(url_for('login'))
+
+        finally:
+            cursor.close()
+            connection.close()
+
     return render_template('login.html')
+
 #change
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
@@ -38,7 +78,7 @@ def create_account():
             flash("Passwords do not match")  # Flash the message
             return redirect(url_for('create_account'))
         
-        
+
         # Add database insertion logic
         connection = mysql.connector.connect(**DB_CONFIG)
         cursor = connection.cursor()
@@ -72,6 +112,10 @@ def create_account():
             connection.close()
 
     return render_template('createAccount.html')
+
+@app.route('/dashboard', methods=['POST', 'GET'])
+def dashboard():
+    return render_template('dashboard.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
