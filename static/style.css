@@ -131,11 +131,16 @@ h3 .left-container {
 }
 
 .top-right-container, .bottom-right-container {
-    height: 38%;
+    height: 45%;
     margin: 10px;
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 8px #adadad;
+    overflow: hidden;
+}
+
+#map1, #map2 {
+    height: 100%;
+    width: 100%;
 }
 
 .form-container{
