@@ -2,28 +2,36 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Simple Webpage Layout</title>
+        <title>Dashboard</title>
         <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     </head>
     <body>
         <header>
             <h1>Cybersecurity Project</h1>
-            <p class="right-header-item">Logout</p>
+            <!--<input type="submit" class="button" value="Logout">!--> 
+            <a href = "{{ url_for('login')}}" style = "color:white">Logout</a>
         </header>
-        <nav>
-            <ul>
-                <li><a href="dashboard.html">Dashboard</a></li>
-            </ul>
-            
-        </nav>
+        
         <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+                
+            </nav>
             <div class="left-container">
-                <h2>Left Container</h2>
-                <p>This is the left container content.</p>
+                <h3>Event Details</h3>
             </div>
             <div class="right-container">
-                <h2>Right Container</h2>
-                <p>This is the right container content.</p>
+                <div class="top-right-container">
+                    
+                </div>
+                <div class="bottom-right-container">
+                    <div id="map2"></div>
+                    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+                    <script src="../static/script.js"></script>
+                </div>
             </div>
         </div>
 
@@ -31,5 +39,4 @@
             <a><p>2024 Cybersecurity Project</p></a>
         </footer>
     </body>
-    
 </html>
