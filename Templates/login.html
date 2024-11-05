@@ -8,6 +8,7 @@
     <body>
         <header>
             <h1>Cybersecurity Project</h1>
+            <a href = "{{ url_for('passwordReset')}}" class = "pwordRe" style = "color:white">Reset Password</a>
         </header>
 
         <div class="container">
@@ -15,8 +16,21 @@
                 <div class="login-createAcc-header">
                     <center><h2>Login</h2></center>
                 </div>
+
+                <div class="flash-messages">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul>
+                                {% for message in messages %}
+                                    <li style="color:red;">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+
                 <div class="form-container">
-                    <form action="#" method="post">
+                    <form action="/" method="post">
                         <div class="form-group">
                             <label class="input" for="username">Email</label>
                             <div class="input-box">  
