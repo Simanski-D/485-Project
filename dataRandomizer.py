@@ -161,10 +161,10 @@ longitude = random_Ant_longitude()
 #print/run methods
 if __name__ == "__main__":
     print("Random Date and Time:", random_datetime())
-    print("Random North American Latitude and Longitude: ", random_NAm_latitude(), ", ", random_NAm_longitude()) #working
-    #print("Random South American Latitude and Longitude: ", random_SAm_latitude(), ", ", random_SAm_longitude()) #kinda working
-    print("Random European Latitude and Longitude: ", random_Eur_latitude(), ", ", random_Eur_longitude()) #working
+    #print("Random North American Latitude and Longitude: ", random_NAm_latitude(), ", ", random_NAm_longitude()) #working
+    print("Random South American Latitude and Longitude: ", random_SAm_latitude(), ", ", random_SAm_longitude()) #kinda working
+    #print("Random European Latitude and Longitude: ", random_Eur_latitude(), ", ", random_Eur_longitude()) #working
     #print("Random Asian Latitude and Longitude: ", random_As_latitude(), ", ", random_As_longitude()) #working
-    #print("Random Australian Latitude and Longitude: ", random_Aus_latitude(), ", ", random_Aus_longitude()) #kinda working
+    print("Random Australian Latitude and Longitude: ", random_Aus_latitude(), ", ", random_Aus_longitude()) #kinda working
     #print("Random Antarctica Latitude and Longitude: ", random_Ant_latitude(), ", ", random_Ant_longitude()) #working
 
