@@ -4,34 +4,61 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Dashboard</title>
         <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script>
+            /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
+            function openNav() {
+                document.getElementById("navbar").style.width = "250px";
+            }
+
+            /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+            function closeNav() {
+                document.getElementById("navbar").style.width = "0";
+            }
+        </script>
     </head>
     <body>
         <header>
-            <h1>Cybersecurity Project</h1>
-            <!--<input type="submit" class="button" value="Logout">!--> 
-            <a href = "{{ url_for('login')}}" style = "color:white">Logout</a>
+            <button class="openbtn" onclick="openNav()"><i class="fa-solid fa-bars" id="bars"></i></button>
+
+            <!--<input type="checkbox" id="check">
+            <label for="check" class="checkbtn">
+                <i class="fa-solid fa-bars" id="bars" style="color: #ffffff;"></i>
+            </label>-->
+
+            <label class="logo">Cybersecurity Project</label>
+            <ul>
+                    <!--<input type="submit" class="button" value="Logout">!--> 
+                <li><a href = "{{ url_for('login')}}">Logout</a></li>
+            </ul> 
         </header>
         
         <div class="container">
-            <nav>
+            <nav id="navbar">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: white; font-size: 22px; float: left; padding-left: 10px;">&times;</a>
                 <ul>
                     <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="createAccount.html">Manage Accounts</a></li>
                 </ul>
+                <!--<ul class="dropdown">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="createAccount.html">Manage Accounts</a></li>
+                </ul>-->
                 
             </nav>
+
             <div class="left-container">
                 <h3>Event Details</h3>
+                <div class="event">
+                    <h4><i class="fa-solid fa-caret-right fa-lg" style="color: #1C1D22;"></i>   Username</h4>
+                    <h4>Count of Logs</h4>
+                </div>
             </div>
             <div class="right-container">
-                <div class="top-right-container">
-                    
-                </div>
-                <div class="bottom-right-container">
-                    <div id="map2"></div>
+                    <div id="map"></div>
                     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
                     <script src="../static/script.js"></script>
-                </div>
             </div>
         </div>
 
@@ -39,4 +66,5 @@
             <a><p>2024 Cybersecurity Project</p></a>
         </footer>
     </body>
+    
 </html>

@@ -146,6 +146,46 @@ def verify():
     email = request.args.get('email')  # Get email from URL
     return render_template('verify.html', email=email)
 
+#password reset
+@app.route('/passwordReset', methods=['POST', 'GET'])
+def passwordReset():
+    
+    if request.method == 'POST':
+        email = request.form.get('username')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_pw')
+
+        if password != confirm_password:
+            flash("Passwords do not match")  # Flash the message
+            return redirect(url_for('passwordReset'))
+
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute('SELECT * FROM cs_admin WHERE email = %s', (email,))
+            result = cursor.fetchone()
+
+            if  result is None:
+                flash("The email entered does not have an account.")
+                return(redirect(url_for('passwordReset')))
+            
+            db_email, db_salt, db_hashed_password = result
+            password_bytes = password.encode('utf-8')
+            salt_bytes = bytes.fromhex(db_salt)
+            hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt_bytes, 100000, dklen=32)
+
+            #changes password for email fetched
+            cursor.execute('UPDATE cs_admin SET pw_key = %s WHERE email = %s', (hashed_password.hex(), email))
+            connection.commit()
+            return redirect(url_for('login'))
+        
+        finally:
+            cursor.close()
+            connection.close()
+    
+    return render_template('passwordReset.html')
+
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
     if request.method == 'POST' :
