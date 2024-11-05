@@ -74,14 +74,18 @@ def login():
 
             #Checking the CS_admin database!!
             cursor.execute("SELECT email, salt, pw_key FROM CS_admin WHERE email = %s", (email,))
-            result = cursor.fetchone()
+            result_cs_admin = cursor.fetchone()
 
-            if result is None:
-                # If no user is found, flash a message
+            cursor.execute("SELECT email FROM email_only WHERE email = %s", (email,))
+            result_email_only = cursor.fetchone()
+
+            if result_cs_admin is None or result_email_only is None:
                 flash("Invalid email or password")
                 return redirect(url_for('login'))
 
-            db_email, db_salt, db_hashed_password = result
+            db_email = result_cs_admin[0]  # We can take it from either result
+            db_salt = result_cs_admin[1]
+            db_hashed_password = result_cs_admin[2]
 
             # Hash the provided password with the stored salt
             password_bytes = password.encode('utf-8')
