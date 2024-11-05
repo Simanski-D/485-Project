@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_cors import CORS
 import hashlib
 import os
 import random
@@ -7,6 +8,7 @@ import mysql.connector
 
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = 'dummy_key'  
 
 
@@ -68,10 +70,6 @@ def login():
         cursor = connection.cursor()
 
         try:
-            # Checking the user_info database!!
-            #cursor.execute("SELECT email, salt, pw_key FROM user_info WHERE email = %s", (email,))
-            #result = cursor.fetchone()
-
             #Checking the CS_admin database!!
             cursor.execute("SELECT email, salt, pw_key FROM CS_admin WHERE email = %s", (email,))
             result_cs_admin = cursor.fetchone()
@@ -171,10 +169,6 @@ def create_account():
         cursor = connection.cursor()
 
         try:
-            # Check if the username already exists in the user_info database!!
-            #cursor.execute("SELECT * FROM user_info WHERE email = %s", (email,))
-            #count = cursor.fetchone()
-
             # Check if the username already exists in the CS_admin database!!
             cursor.execute("SELECT * FROM CS_admin WHERE email = %s", (email,))
             count = cursor.fetchone()
@@ -192,10 +186,6 @@ def create_account():
             salt = os.urandom(32)
             password_bytes = password.encode("utf-8")
             hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt, iterations, dklen=key_length)
-
-            # Store user in database
-            #cursor.execute("INSERT INTO user_info (email, salt, pw_key) VALUES (%s, %s, %s)", (email, salt.hex(), hashed_password.hex()))
-            #connection.commit()
 
             #CS_admin database!!
             cursor.execute("INSERT INTO CS_admin (email, salt, pw_key) VALUES (%s, %s, %s)", (email, salt.hex(), hashed_password.hex()))
