@@ -72,6 +72,44 @@ header ul li a:hover {
     display: none;
 }
 
+.mobile{
+    float: left;
+    position: relative;
+    box-shadow: 0 0 25px 0 black;
+    overflow: hidden;
+    color: red;
+    width: 100%;
+}
+
+#tm {
+    display: none;
+}
+
+.sidenav {
+    background-color: blue;
+    width: 150px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    padding-top: 100pxl
+}
+
+.sidenav li {
+    list-style-type: none;
+}
+
+.sidenav a {
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar b {
+    font: bold 12px/48px Montserrat;
+    display: block;
+    opacity: 0;
+}
+
 /*header {
     display: flex;
     justify-content: space-between;
@@ -318,7 +356,20 @@ nav ul li a:hover {
     background-color: #396B86;
 }
 
+#tm:checked ~ section {
+    transform: translateX(150px);
+}
+
+#tm:checked ~ .sidenav b {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 @media only screen and (max-width: 980px) {
+    /*.fullSizeNavbar {
+        display: none;
+    }
+    
     .checkbtn {
         display: block;
     }
@@ -359,5 +410,5 @@ nav ul li a:hover {
     
     nav .closebtn {
         display: inline;
-    }
+    }*/
 }
