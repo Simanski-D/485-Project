@@ -8,6 +8,7 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+#pip install scikit-learn, pandas, tenserflow, tenserflow
 
 app = Flask(__name__)
 app.secret_key = 'dummy_key'  
@@ -102,9 +103,7 @@ def predict():
                 input_path= os.path.join(upload_folder,inputfile.filename)
                 inputfile.save(input_path)
                 with open(input_path, 'r', encoding='utf-8') as file:
-                    file_contents = file.read()
-                    print(f"File contents:\n{file_contents[:200]}...")  # Print the first 200 characters to debug
-            
+                    file_contents = file.read()           
                 # Check if the file is empty
                 if os.stat(input_path).st_size == 0:
                     print(f"The uploaded file {inputfile.filename} is empty.")
