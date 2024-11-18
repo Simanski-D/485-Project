@@ -2,6 +2,77 @@
 @import url('https://fonts.googleapis.com/css?family=Work Sans');
 
 header {
+    background-color: #1C1D22;
+    height: 80px;
+    width: 100%;
+}
+
+header i {
+    font-size: 24px;
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+    line-height: 80px;
+    font-family: 'Work Sans';
+    padding-left: 20px;
+}
+
+header button {
+    display: none;
+}
+
+nav .closebtn {
+    display: none;
+}
+
+header ul {
+    float: right;
+    margin-right: 15px;
+}
+
+header ul li {
+    list-style: none;
+    display: inline-block;
+    line-height: 50px;
+    margin: 0 5px;
+}
+
+header ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    padding: 10px 15px;
+    cursor: pointer;
+
+    transition: all 0.3s;
+}
+
+header ul li a:hover {
+    background-color: #396B86;
+}
+
+.checkbtn {
+    float: left;
+    margin: 28px;
+    cursor: pointer;
+    display: none;
+}
+
+.openbtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 20px;
+    color: #ffffff;
+}
+
+#check {
+    display: none;
+}
+
+/*header {
     display: flex;
     justify-content: space-between;
     align-items: center;
