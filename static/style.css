@@ -5,12 +5,87 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: white;
+    background-color: #1C1D22;
+    height: 80px;
+    width: 100%;
+}
+
+header i {
+    font-size: 24px;
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+    line-height: 80px;
+    font-family: 'Work Sans';
+    padding-left: 20px;
+}
+
+header button {
+    display: none;
+}
+
+nav .closebtn {
+    display: none;
+}
+
+header ul {
+    float: right;
+    margin-right: 15px;
+}
+
+header ul li {
+    list-style: none;
+    display: inline-block;
+    line-height: 50px;
+    margin: 0 5px;
+}
+
+header ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    padding: 10px 15px;
+    cursor: pointer;
+
+    transition: all 0.3s;
+}
+
+header ul li a:hover {
+    background-color: #396B86;
+}
+
+.checkbtn {
+    float: left;
+    margin: 28px;
+    cursor: pointer;
+    display: none;
+}
+
+.openbtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 20px;
+    color: #ffffff;
+}
+
+#check {
+    display: none;
+}
+
+/*header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #1C1D22;
     color: white;
     height: 12%;
     line-height: 7%;
     width: 100%;
-}
+}*/
 
 body {
     font-family: Arial, sans-serif;
@@ -30,16 +105,6 @@ footer {
     font-size: 10pt;
 }
 
-h1 {
-    color: white;
-    font-family: 'Work Sans';
-    font-size: 20pt;
-}
-
-header h1 {
-    padding-left: 20px;
-}
-
 .right-header-item {
     padding-right: 20px;
 }
@@ -47,6 +112,21 @@ header h1 {
 h2 {
     color: #1C1D22;
     font-family: 'Work Sans';
+}
+
+h3 {
+    color: #1C1D22;
+    font-family: 'Work Sans';
+    font-size: 21px;
+    padding-left: 20px;
+}
+
+h4 {
+    color: #1C1D22;
+    font-family: 'Nunito';
+    font-size: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 p, .input {
@@ -71,6 +151,7 @@ nav {
     width: 125px;
     top: 0;
     left: 0;
+    overflow-x: hidden; 
 }
 
 nav ul {
@@ -99,7 +180,6 @@ nav ul li a:hover {
     align-items: center;
     justify-content: center;
     flex: 1;
-    padding: 20px;
 }
 
 .center-container {
@@ -107,14 +187,53 @@ nav ul li a:hover {
     position: fixed;
 }
 
-.left-container,
+.left-container {
+    flex: 1;
+    margin: 10px;
+    width: 50%;
+    height: 95%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #adadad;
+}
+
+.left-container #createAccount{
+    flex: 1;
+    margin: 10px;
+    width: 100%;
+    height: 95%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #adadad;
+    overflow: scroll;
+}
+
 .right-container {
     flex: 1;
     margin: 10px;
-    padding: 20px;
-    background-color: #adadad;
-    border: 1px solid #396B86;
+    width: 100%;
+    height: 95%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #adadad;
+    overflow: hidden;
 }
+
+h3 .left-container {
+    font-weight: 900;
+}
+
+.top-right-container, .bottom-right-container {
+    height: 45%;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #adadad;
+    overflow: hidden;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+}
+
 
 .form-container{
     background-color: 264759;
@@ -154,6 +273,37 @@ nav ul li a:hover {
     padding-bottom: 10px;
 }
 
+.event {
+    display: flex;
+    justify-content: space-between;
+    height: 13%;
+    margin: 15px;
+    border-radius: 8px;
+    background: #E5E5E5;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+/*Buttons*/
+
+header .button {
+    width: 5%;
+    height: 35px;
+    background: none;
+    color: white;
+    border: none;
+    outline: none;
+    font-family: 'Nunito';
+    font-size: medium;
+    margin-left: 10%;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+header .button a:hover {
+    background-color: #396B86;
+}
+
 .form-container .button {
     width: 80%;
     height: 35px;
@@ -167,4 +317,52 @@ nav ul li a:hover {
     margin-left: 10%;
     margin-right: 10%;
     cursor: pointer;
+}
+
+nav ul li a:hover {
+    background-color: #396B86;
+}
+
+@media only screen and (max-width: 980px) {
+    .checkbtn {
+        display: block;
+    }
+
+    .logo {
+        padding-left: 0px;
+    }
+
+    .container {
+        display: block;
+    }
+
+    nav {
+        position: absolute;
+        top: 80px;
+    }
+
+    .left-container {
+        margin: 10px;
+        width: 100%;
+        height: 95%;
+        border-radius: 8px;
+        box-shadow: 0px 0px 8px #adadad;
+    }
+    
+    .right-container {
+        margin: 10px;
+        width: 100%;
+        height: 95%;
+        border-radius: 8px;
+        box-shadow: 0px 0px 8px #adadad;
+        overflow: hidden;
+    }
+
+    header button {
+        display: inline;
+    }
+    
+    nav .closebtn {
+        display: inline;
+    }
 }
