@@ -37,8 +37,7 @@ DB_CONFIG = {
 
 @app.route('/', methods=['POST', 'GET'])
 def login():
-    ##CHANGED FOR TESTING
-    return render_template('predict.html')
+    return render_template('login.html')
 #change
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
