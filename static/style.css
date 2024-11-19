@@ -250,7 +250,7 @@ nav ul li a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 1;
+    height: 95vh;
 }
 
 .center-container {
@@ -261,7 +261,6 @@ nav ul li a:hover {
 .left-container {
     flex: 1;
     margin: 10px;
-    width: 50%;
     height: 95%;
     border-radius: 8px;
     box-shadow: 0px 0px 8px #adadad;
@@ -280,7 +279,6 @@ nav ul li a:hover {
 .right-container {
     flex: 1;
     margin: 10px;
-    width: 100%;
     height: 95%;
     border-radius: 8px;
     box-shadow: 0px 0px 8px #adadad;
