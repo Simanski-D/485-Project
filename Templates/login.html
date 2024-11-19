@@ -7,8 +7,10 @@
     </head>
     <body>
         <header>
-            <h1>Cybersecurity Project</h1>
-            <a href = "{{ url_for('passwordReset')}}" class = "pwordRe" style = "color:white">Reset Password</a>
+            <button class="openbtn" onclick="openNav()">
+                <i class="fa-solid fa-bars" id="bars"></i>
+            </button>
+            <label class="logo">Cybersecurity Project</label>
         </header>
 
         <div class="container">
@@ -44,7 +46,6 @@
                             </div>
                         </div>
                         <input type="submit" class="button" value="LOGIN">
-                        <a href="{{ url_for('create_account')}}" class="createAcc">Create Account</a>
                     </form>
                 </div>
             </div>
