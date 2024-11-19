@@ -6,11 +6,13 @@
         <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
         <header>
-            <label for="tm"><i class="fa-solid fa-bars fa-xlg" id="bars" style="color: white; padding-left: 20px;"></i></label>
-
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <i class="fa-solid fa-bars fa-lg" style="color: #ffffff;"></i>
+            </a>
             <label class="logo">Cybersecurity Project</label>
             <ul>
                 <li><a href = "{{ url_for('login')}}">Logout</a></li>
@@ -18,24 +20,12 @@
         </header>
         
         <div class="container">
-            <div class="mobile">
-                <input type="checkbox" id="tm">
-                <ul class="sidenav">
-                    <li><a href="dashboard.html">Dashboard</a></li>
-                    <li><a href="createAccount.html">Manage Accounts</a></li>
-                </ul>
-            </div>
 
-            <nav id="fullSizeNavbar">
+            <nav class="fullSizeNavbar" id="nav">
                 <ul>
                     <li><a href="dashboard.html">Dashboard</a></li>
                     <li><a href="createAccount.html">Manage Accounts</a></li>
                 </ul>
-                <!--<ul class="dropdown">
-                    <li><a href="dashboard.html">Dashboard</a></li>
-                    <li><a href="createAccount.html">Manage Accounts</a></li>
-                </ul>-->
-                
             </nav>
 
             <div class="left-container">
@@ -56,5 +46,14 @@
             <a><p>2024 Cybersecurity Project</p></a>
         </footer>
     </body>
-    
+    <script>
+        function myFunction() {
+          var x = document.getElementById("nav");
+          if (x.style.display === "block") {
+            x.style.display = "none";
+          } else {
+            x.style.display = "block";
+          }
+        }
+    </script>
 </html>
