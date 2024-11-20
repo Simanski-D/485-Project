@@ -13,7 +13,15 @@
             <label class="logo">Cybersecurity Project</label>
         </header>
         <div class="container">
-            <div class="center-container">
+            <nav id="navbar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: white; font-size: 22px; float: left; padding-left: 10px;">&times;</a>
+                <ul>
+                    <li><a href="{{ url_for('dashboard')}}">Dashboard</a></li>
+                    <li><a href="{{ url_for('create_account')}}">Manage Accounts</a></li>
+                    <li><a href="{{ url_for('predict')}}">Predict logs</a></li>
+                </ul>
+            </nav>
+            <div class="right-container">
                 <div class="login-createAcc-header">
                     <center><h2>Log Predictor</h2></center>
                 </div>
