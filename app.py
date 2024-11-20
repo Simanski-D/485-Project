@@ -284,7 +284,7 @@ def predict():
             
         else:
             print("No file uploaded")
-            return "No file uploaded", 400  # Return error message if no file is uploaded
+            return render_template('predict.html')  # Return error message if no file is uploaded
     
 
         return render_template('predict.html')
@@ -345,7 +345,9 @@ def ip_to_int(ip):
     except ValueError:
         return None
 
-
+@app.route('/dashboard', methods=['POST', 'GET'])
+def dashboard():
+    return render_template('dashboard.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
