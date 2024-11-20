@@ -284,7 +284,7 @@ def predict():
             
         else:
             print("No file uploaded")
-            return "No file uploaded", 400  # Return error message if no file is uploaded
+            return render_template('predict.html')  # Return error message if no file is uploaded
     
 
         return render_template('predict.html')
