@@ -99,6 +99,8 @@ footer {
     text-align: center;
     padding: .2rem;
     font-size: 10pt;
+    position: relative;
+    bottom: 0;
 }
 
 .right-header-item {
@@ -176,6 +178,7 @@ nav ul li a:hover {
     align-items: center;
     justify-content: center;
     flex: 1;
+
 }
 
 .center-container {
@@ -190,6 +193,7 @@ nav ul li a:hover {
     height: 95%;
     border-radius: 8px;
     box-shadow: 0px 0px 8px #adadad;
+    
 }
 
 .left-container #createAccount{
@@ -210,6 +214,7 @@ nav ul li a:hover {
     border-radius: 8px;
     box-shadow: 0px 0px 8px #adadad;
     overflow: hidden;
+    
 }
 
 h3 .left-container {
@@ -328,29 +333,42 @@ nav ul li a:hover {
     }
 
     .container {
-        display: block;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        min-height: 100vh;
     }
 
     nav {
         position: absolute;
         top: 80px;
     }
-
+    footer {
+        bottom:0;
+        position: absolute;
+        width: 100%;
+        flex: 1 1 100%;
+        margin-top: auto;
+        bottom: 0;
+    }
     .left-container {
         margin: 10px;
         width: 100%;
-        height: 95%;
+        height: 47.5%;
         border-radius: 8px;
         box-shadow: 0px 0px 8px #adadad;
+        flex: 1 1 100%;
     }
     
     .right-container {
         margin: 10px;
         width: 100%;
-        height: 95%;
+        height: 47.5%;
         border-radius: 8px;
         box-shadow: 0px 0px 8px #adadad;
         overflow: hidden;
+        
+        flex: 1 1 100%;
     }
 
     header button {
