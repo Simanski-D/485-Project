@@ -6,10 +6,22 @@
   - Clone the repo into your venv: `git clone https://github.com/Simanski-D/485-Project.git`
 - When working on and running the website. Make sure to activate the virtual environment that you created (See step 2).
 - Install dependencies:
-  `pip install flask`,
-  `pip install flask_cors`,
-  `sklearn.preprocessing`,
-  `pip install scikit-learn`,
-  `pip install pandas`,
-  `pip install tensorflow`
+  ```
+  pip install flask
+  ```
+  ```
+  pip install flask_cors
+  ```
+  ```
+  pip install sklearn.preprocessing
+  ```
+  ```
+  pip install scikit-learn
+  ```
+  ```
+  pip install pandas
+  ```
+  ```
+  pip install tensorflow
+  ```
 - Under `pyvenv.cfg` double check that `include-system-site-packages = true`
