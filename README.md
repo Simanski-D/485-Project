@@ -22,6 +22,6 @@
   pip install pandas
   ```
   ```
-  pip install tensorflo
+  pip install tensorflow
   ```
 - Under `pyvenv.cfg` double check that `include-system-site-packages = true`
