@@ -36,5 +36,13 @@
                 </div>
             </div>
         </div>
+        <script>
+            const submit = document.getElementById('submit')
+            submit.addEventListener('click', sendPath);
+            function sendPath(){
+            var filePath = "inputfolder/uploadedfile.csv";
+            window.location.href = "/dashboard?file_path=" + encodeURIComponent(filePath);
+            }
+        </script>
     </body>
 </html>

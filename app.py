@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file,session
 from flask_cors import CORS
 import hashlib
 import os
@@ -79,60 +79,60 @@ def send_verification_email(email, verification_code):
 @app.route('/', methods=['POST', 'GET'])
 def login():
 
-    if request.method == 'POST':
-        email = request.form.get('username')
-        password = request.form.get('password')
+   # if request.method == 'POST':
+    #    email = request.form.get('username')
+     #   password = request.form.get('password')
 
         # Connect to the database
-        connection = mysql.connector.connect(**DB_CONFIG)
-        cursor = connection.cursor()
+      #  connection = mysql.connector.connect(**DB_CONFIG)
+       # cursor = connection.cursor()
 
-        try:
+        #try:
             #Checking the CS_admin database!!
-            cursor.execute("SELECT email, salt, pw_key FROM CS_admin WHERE email = %s", (email,))
-            result_cs_admin = cursor.fetchone()
+         #   cursor.execute("SELECT email, salt, pw_key FROM CS_admin WHERE email = %s", (email,))
+          #  result_cs_admin = cursor.fetchone()
 
-            cursor.execute("SELECT email FROM email_only WHERE email = %s", (email,))
-            result_email_only = cursor.fetchone()
-
-            if result_cs_admin is None or result_email_only is None:
-                flash("Invalid email or password")
-                return redirect(url_for('login'))
-
-            db_email = result_cs_admin[0]  # We can take it from either result
-            db_salt = result_cs_admin[1]
-            db_hashed_password = result_cs_admin[2]
-
-            # Hash the provided password with the stored salt
-            password_bytes = password.encode('utf-8')
-            salt_bytes = bytes.fromhex(db_salt)
-            hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt_bytes, 100000, dklen=32)
-
-            # Compare the hashed password with the one in the database
-            if hashed_password.hex() == db_hashed_password:
+#            cursor.execute("SELECT email FROM email_only WHERE email = %s", (email,))
+ #           result_email_only = cursor.fetchone()
+#
+ #           if result_cs_admin is None or result_email_only is None:
+  #              flash("Invalid email or password")
+   #             return redirect(url_for('login'))
+#
+ #           db_email = result_cs_admin[0]  # We can take it from either result
+  #          db_salt = result_cs_admin[1]
+   #         db_hashed_password = result_cs_admin[2]
+#
+ #           # Hash the provided password with the stored salt
+  #          password_bytes = password.encode('utf-8')
+   #         salt_bytes = bytes.fromhex(db_salt)
+    #        hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt_bytes, 100000, dklen=32)
+#
+           # Compare the hashed password with the one in the database
+  #          if hashed_password.hex() == db_hashed_password:
                 # Generate a verification code and store it in the database
-                verification_code = generate_verification_code()
-                send_verification_email(email, verification_code)
-
+ #               verification_code = generate_verification_code()
+  #              send_verification_email(email, verification_code)
+#
                 # Store the verification code in a new table
-                cursor.execute("""INSERT INTO email_verification(email, verification_code) VALUES (%s, %s)ON DUPLICATE KEY UPDATE verification_code = %s;
-                """, (email, verification_code, verification_code))
-
-                connection.commit()
-                flash("A verification code has been sent to your email.")
-                return redirect(url_for('verify', email=email))
-
-
-            else:
-                # If the password is incorrect, flash a message
-                flash("Invalid email or password")
-                return redirect(url_for('login'))
-
-        finally:
-            cursor.close()
-            connection.close()
-
-    return render_template('login.html')
+  #              cursor.execute("""INSERT INTO email_verification(email, verification_code) VALUES (%s, %s)ON DUPLICATE KEY UPDATE verification_code = %s;
+   #             """, (email, verification_code, verification_code))
+#
+ #               connection.commit()
+  #              flash("A verification code has been sent to your email.")
+   #             return redirect(url_for('verify', email=email))
+#
+#
+ #           else:
+  #              # If the password is incorrect, flash a message
+   #             flash("Invalid email or password")
+    #            return redirect(url_for('login'))
+#
+ #       finally:
+  #          cursor.close()
+   #         connection.close()
+#
+    return render_template('dashboard.html')
 
 @app.route('/verify', methods=['POST', 'GET'])
 def verify():
@@ -258,6 +258,7 @@ def create_account():
 
 @app.route('/predict', methods=['GET','POST'])
 def predict():
+        #input_path = None
         if request.method == 'POST' :
             print("POST request received!")
             inputfile= request.files['inputfiles']
@@ -265,7 +266,11 @@ def predict():
                 
                 print(f"File received: {inputfile.filename}")
                 input_path= os.path.join(upload_folder,inputfile.filename)
+                print(f"input path: {input_path}")
                 inputfile.save(input_path)
+                session['file_path'] = input_path
+                
+                print(f"File path stored in session: {session.get('file_path')}")
                 with open(input_path, 'r', encoding='utf-8') as file:
                     file_contents = file.read()           
                 # Check if the file is empty
@@ -281,14 +286,9 @@ def predict():
                 except Exception as e:
                     print(f"Error during file processing: {str(e)}")
                 return f"Error during file processing: {str(e)}", 500  # Handle any errors during processing
-            
-        else:
-            print("No file uploaded")
-            return render_template('predict.html')  # Return error message if no file is uploaded
+            return redirect(url_for('dashboard',input_path))
+        return render_template("predict.html")
     
-
-        return render_template('predict.html')
-
     
 
 
@@ -347,6 +347,12 @@ def ip_to_int(ip):
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
+    file_path = session.get('input_path', None)
+
+    if file_path:
+        print(f"File path received in dashboard: {file_path}")
+    else:
+        print("No file path in session")
     return render_template('dashboard.html')
 
 if __name__ == '__main__':
