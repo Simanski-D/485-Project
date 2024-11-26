@@ -23,9 +23,7 @@
 
     <body>
         <header>
-            <button class="openbtn" onclick="openNav()">
-                <i class="fa-solid fa-bars" id="bars"></i>
-            </button>
+            <button class="openbtn" onclick="openNav()"> <i class="fa-solid fa-bars" id="bars"></i> </button>
             <label class="logo">Cybersecurity Project</label>
             <ul>
                 <li><a href="{{ url_for('login')}}">Logout</a></li>
@@ -40,6 +38,7 @@
                     <li><a href="{{ url_for('dashboard')}}">Dashboard</a></li>
                     <li><a href="{{ url_for('create_account')}}">Manage Accounts</a></li>
                     <li><a href="{{ url_for('predict')}}">Predict logs</a></li>
+                    <li><a href="{{ url_for('passwordResetemail')}}">Password Reset</a></li>
                 </ul>
             </nav>
 

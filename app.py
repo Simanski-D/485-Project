@@ -45,14 +45,14 @@ def generate_verification_code():
 
 # Function to send verification email
 def send_verification_email(email, verification_code):
-    sender_email = "kadinstars@gmail.com"  # Replace with your sender email
-    sender_password = "ogdd mayq hzbq bfvd"  # Replace with your app password
+    sender_email = "kadinstars@gmail.com"
+    sender_password = "ogdd mayq hzbq bfvd"
     subject = "Your Verification Code"
     message = f"Subject: {subject}\n\nYour verification code is: {verification_code}"
 
     smtp_servers = [
-        ("smtp.gmail.com", 587),  # Try TLS
-        ("smtp.gmail.com", 465),  # Try SSL
+        ("smtp.gmail.com", 587),  # TLS
+        ("smtp.gmail.com", 465),  # SSL
     ]
 
     for server_address, port in smtp_servers:
@@ -76,6 +76,7 @@ def send_verification_email(email, verification_code):
     # If all ports fail
     print("Failed to send email on all available ports.")
 
+#Login html page functionality
 @app.route('/', methods=['POST', 'GET'])
 def login():
 
@@ -99,7 +100,7 @@ def login():
                 flash("Invalid email or password")
                 return redirect(url_for('login'))
 
-            db_email = result_cs_admin[0]  # We can take it from either result
+            db_email = result_cs_admin[0]
             db_salt = result_cs_admin[1]
             db_hashed_password = result_cs_admin[2]
 
@@ -122,7 +123,6 @@ def login():
                 flash("A verification code has been sent to your email.")
                 return redirect(url_for('verify', email=email))
 
-
             else:
                 # If the password is incorrect, flash a message
                 flash("Invalid email or password")
@@ -134,6 +134,7 @@ def login():
 
     return render_template('login.html')
 
+#Verify html page functionality
 @app.route('/verify', methods=['POST', 'GET'])
 def verify():
     if request.method == 'POST':
@@ -164,7 +165,38 @@ def verify():
     email = request.args.get('email')  # Get email from URL
     return render_template('verify.html', email=email)
 
-#password reset
+#Verify html page for the dashboard password reset
+@app.route('/verify2', methods=['POST', 'GET'])
+def verify2():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        entered_code = request.form.get('verification_code')
+
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute("SELECT verification_code FROM email_verification WHERE email = %s", (email,))
+            result = cursor.fetchone()
+
+            if result and result[0] == entered_code:
+                # Successful verification
+                cursor.execute("DELETE FROM email_verification WHERE email = %s", (email,))
+                connection.commit()
+                return redirect(url_for('passwordReset'))
+            else:
+                flash("Invalid verification code.")
+                return redirect(url_for('verify2', email=email))
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    email = request.args.get('email')  # Get email from URL
+    return render_template('verify2.html', email=email)
+
+#password reset html page functionality
 @app.route('/passwordReset', methods=['POST', 'GET'])
 def passwordReset():
     
@@ -203,6 +235,42 @@ def passwordReset():
             connection.close()
     
     return render_template('passwordReset.html')
+
+#password reset email page functionality
+@app.route('/passwordResetemail', methods=['POST', 'GET'])
+def passwordResetemail():
+    
+    if request.method == 'POST':
+        email = request.form.get('username')
+
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute('SELECT * FROM cs_admin WHERE email = %s', (email,))
+            result = cursor.fetchone()
+
+            if  result is None:
+                flash("The email entered does not have an account.")
+                return(redirect(url_for('passwordResetemail')))        
+
+            # Generate a verification code and store it in the database
+            verification_code = generate_verification_code()
+            send_verification_email(email, verification_code)
+
+            # Store the verification code in a new table
+            cursor.execute("""INSERT INTO email_verification(email, verification_code) VALUES (%s, %s)ON DUPLICATE KEY UPDATE verification_code = %s;
+            """, (email, verification_code, verification_code))
+
+            connection.commit()
+            flash("A verification code has been sent to your email.")
+            return redirect(url_for('verify2', email=email))
+        
+        finally:
+            cursor.close()
+            connection.close()
+        
+    return render_template('passwordResetemail.html')
 
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
@@ -289,8 +357,9 @@ def predict():
 
         return render_template('predict.html')
 
-    
-
+@app.route('/dashboard', methods=['POST', 'GET'])
+def dashboard():
+    return render_template('dashboard.html')
 
 #Datacleaning method for user input
 def clean_data(userdf):
@@ -344,10 +413,6 @@ def ip_to_int(ip):
         return int(ipaddress.ip_address(ip))
     except ValueError:
         return None
-
-@app.route('/dashboard', methods=['POST', 'GET'])
-def dashboard():
-    return render_template('dashboard.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
