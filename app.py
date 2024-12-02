@@ -347,7 +347,29 @@ def ip_to_int(ip):
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
-    return render_template('dashboard.html')
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # SQL query to get the username and the count of occurrences
+            cursor.execute("""
+                            SELECT username, COUNT(*) as log_count 
+                            FROM event 
+                            GROUP BY username
+                        """)
+            events = cursor.fetchall()  # Get all events (list of dictionaries)
+
+            # Store the results (username and count) in the list
+            usernames = [{'username': event['username'], 'log_count': event['log_count']} for event in events]
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    # Render HTML template with the usernames
+    return render_template('dashboard.html', usernames=usernames)
 
 if __name__ == '__main__':
     app.run(debug=True)
