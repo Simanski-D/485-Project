@@ -206,6 +206,27 @@ def passwordReset():
 
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # SQL query to get emails
+            cursor.execute("""
+                            SELECT email
+                            FROM cs_admin
+                            ORDER BY email asc;
+                        """)
+            users = cursor.fetchall()
+
+            # Extract just the emails for displaying
+            emails = [user['email'] for user in users]
+
+        finally:
+            cursor.close()
+            connection.close()
+	
     if request.method == 'POST' :
 
         email = request.form.get('email')
@@ -254,7 +275,7 @@ def create_account():
             cursor.close()
             connection.close()
 
-    return render_template('createAccount.html')
+    return render_template('manageAccount.html', emails=emails)
 
 @app.route('/predict', methods=['GET','POST'])
 def predict():
