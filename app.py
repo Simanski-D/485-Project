@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file,session
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file,session,jsonify
 from flask_cors import CORS
 import hashlib
 import os
@@ -258,38 +258,35 @@ def create_account():
 
 @app.route('/predict', methods=['GET','POST'])
 def predict():
-        #input_path = None
         if request.method == 'POST' :
             print("POST request received!")
             inputfile= request.files['inputfiles']
             if inputfile:
                 
                 print(f"File received: {inputfile.filename}")
-                input_path= os.path.join(upload_folder,inputfile.filename)
-                print(f"input path: {input_path}")
-                inputfile.save(input_path)
-                session['file_path'] = input_path
+                file_path= os.path.join(upload_folder,inputfile.filename)
+                print(f"input path: {file_path}")
+                inputfile.save(file_path)
+                session['file_path'] = file_path
                 
                 print(f"File path stored in session: {session.get('file_path')}")
-                with open(input_path, 'r', encoding='utf-8') as file:
+                with open(file_path, 'r', encoding='utf-8') as file:
                     file_contents = file.read()           
                 # Check if the file is empty
-                if os.stat(input_path).st_size == 0:
+                if os.stat(file_path).st_size == 0:
                     print(f"The uploaded file {inputfile.filename} is empty.")
                     return "Error: The uploaded file is empty.", 400  # Return error if the file is empty
 
                 # Process the file (clean and predict)
                 try:
-                    output_file = process_file(input_path)
+                    output_file = process_file(file_path)
                     print(f"Processed file saved to: {output_file}")
                     return send_file(output_file, as_attachment=True)
                 except Exception as e:
                     print(f"Error during file processing: {str(e)}")
                 return f"Error during file processing: {str(e)}", 500  # Handle any errors during processing
-            return redirect(url_for('dashboard',input_path))
+            return render_template('predict.html')
         return render_template("predict.html")
-    
-    
 
 
 #Datacleaning method for user input
@@ -347,12 +344,7 @@ def ip_to_int(ip):
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
-    file_path = session.get('input_path', None)
 
-    if file_path:
-        print(f"File path received in dashboard: {file_path}")
-    else:
-        print("No file path in session")
     return render_template('dashboard.html')
 
 if __name__ == '__main__':

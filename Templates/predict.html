@@ -30,19 +30,30 @@
                         <div class="box__input">
                             <input class="box__file" type="file" name="inputfiles" id="file" data-multiple-caption="{count} files selected" multiple />
                             <label for="inputfiles"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-                            <button class="box__button" type="submit">Submit</button>  
+                            <button class="box__button" type="submit" id="submit">Submit</button>  
                           </div>
                     </form>
                 </div>
             </div>
         </div>
         <script>
-            const submit = document.getElementById('submit')
-            submit.addEventListener('click', sendPath);
-            function sendPath(){
-            var filePath = "inputfolder/uploadedfile.csv";
-            window.location.href = "/dashboard?file_path=" + encodeURIComponent(filePath);
-            }
+                const submitted = document.getElementById('submit');
+                submitted.addEventListener('click',function(event){
+                    const fileInput = document.getElementById('file');
+
+                    // Check if a file has been selected
+                    const files = fileInput.files; 
+
+                    if (files.length > 0) {
+                        // Get the file name of the first file
+                        const fileName = files[0].name;
+                        localStorage.setItem('fileName', fileName);  // Store the file name in localStorage
+                        console.log('File name saved to localStorage:', fileName);
+                    // Call another function and pass the file name
+                    } else {
+                    alert('Please select a file before submitting.');
+                    }
+                });
         </script>
     </body>
 </html>
