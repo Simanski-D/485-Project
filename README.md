@@ -13,7 +13,7 @@
   pip install flask_cors
   ```
   ```
-  pip install sklearn.preprocessing
+  pip install mysql-connector-python
   ```
   ```
   pip install scikit-learn
