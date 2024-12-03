@@ -8,7 +8,7 @@
 - Install dependencies:
   `pip install flask`,
   `pip install flask_cors`,
-  `sklearn.preprocessing`,
+  `pip install sklearn.preprocessing`,
   `pip install scikit-learn`,
   `pip install pandas`,
   `pip install tensorflow`
