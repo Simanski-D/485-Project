@@ -120,6 +120,11 @@ p, .input {
 
 }
 
+label {
+    font-family: 'Nunito';
+    color: white;
+}
+
 .createAcc {
     font-family: 'Nunito';
     color: white;
@@ -163,6 +168,19 @@ nav ul li a:hover {
 .container {
     display: flex;
     height: auto;
+    justify-content: center;
+    justify-items: center;
+}
+
+.simple-page-container {
+    display: flex;
+    height: 80%;
+    justify-content: center;
+    align-items: center;
+}
+
+.simple-page-center-container {
+    width: 450px;
     justify-content: center;
 }
 
@@ -312,6 +330,25 @@ header .button a:hover {
     margin-left: 10%;
     margin-right: 10%;
     cursor: pointer;
+}
+
+.form-container .verifyButton {
+    width: 100px;
+    height: 35px;
+    background: #E9CC7C;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    font-family: 'Nunito';
+    font-weight: 900;
+    margin-top: 6%;
+    margin-left: 37%;
+    margin-right: 37%;
+    cursor: pointer;
+}
+
+.form-container a:visited{
+    color: white;
 }
 
 nav ul li a:hover {
