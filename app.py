@@ -374,23 +374,35 @@ def dashboard():
         cursor = connection.cursor(dictionary=True)
 
         try:
-            # SQL query to get the username and the count of occurrences
-            cursor.execute("""
-                            SELECT username, COUNT(*) as log_count 
-                            FROM event 
-                            GROUP BY username
-                        """)
-            events = cursor.fetchall()  # Get all events (list of dictionaries)
+            # Fetch all usernames from the event table
+            cursor.execute('SELECT DISTINCT username FROM event')
+            usernames = cursor.fetchall()  # List of unique usernames
+
+            # Initialize a dictionary to store logs for each user
+            user_logs = {}
+
+            for user in usernames:
+                username = user['username']
+
+                # Fetch logs for each username
+                cursor.execute("""
+                        SELECT timestamp, geoLat, geoLon, clientIP, eventOutcome 
+                        FROM event 
+                        WHERE username = %s
+                    """, (username,))
+
+                logs = cursor.fetchall()  # List of logs for the current username
+                user_logs[username] = logs
 
             # Store the results (username and count) in the list
-            usernames = [{'username': event['username'], 'log_count': event['log_count']} for event in events]
+            #usernames = [{'username': event['username'], 'log_count': event['log_count'], 'timestamp': event['timestamp'], 'clientIP': event['clientIP'], 'geoLat': event['geoLat'], 'geoLon': event['geoLon'], 'eventOutcome': event['eventOutcome']} for event in events]
 
         finally:
             cursor.close()
             connection.close()
 
     # Render HTML template with the usernames
-    return render_template('dashboard.html', usernames=usernames)
+    return render_template('dashboard.html', usernames=usernames, user_logs=user_logs)
 
 if __name__ == '__main__':
     app.run(debug=True)
