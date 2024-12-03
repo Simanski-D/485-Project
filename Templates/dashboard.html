@@ -69,6 +69,13 @@
         <!-- Leaflet JS and custom map script -->
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <!-- Include Leaflet MarkerCluster CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.0/dist/MarkerCluster.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.0/dist/MarkerCluster.Default.css" />
+        <!-- Include Leaflet MarkerCluster JS -->
+        <script src="https://unpkg.com/leaflet.markercluster@1.5.0/dist/leaflet.markercluster.js"></script>
+
+
         <script>
             // Initialize map (in global scope for later use)
             const map = L.map('map').setView([0, -10], 1);  // Default center and zoom level
@@ -82,28 +89,34 @@
             // When the document is fully loaded, proceed with CSV loading
             window.onload = function () {
               // Load and parse the CSV file
-              const fileName = localStorage.getItem('fileName');
+              const fileName = localStorage.getItem('fileName2');
+              console.log(fileName);
                 if(fileName !== null){
-                console.log('File name retrieved from localStorage:', fileName);
-                const fullPath = "./outputfiles/" + fileName;
-                console.log("fullpath: " , fullPath);
-                d3.csv(fullPath).then(function(data) {
+                    console.log('File name retrieved from localStorage:', fileName);
+                    const fullPath = "/static/outputfiles/" + fileName;
+                    console.log("fullpath: " , fullPath);
+                    const markers = L.markerClusterGroup();
+                    d3.csv(fullPath).then(function(data) {
                     
-                // Loop through each row of the CSV data and plot markers
-                data.forEach(function(row) {
-                  // Ensure correct data format for lat, lon (parse as float)
-                  let lat = parseFloat(row["client.geo.location.lat"]);
-                  let lon = parseFloat(row["client.geo.location.lon"]);
+                    // Loop through each row of the CSV data and plot markers
+                    data.forEach(function(row) {
+                    // Ensure correct data format for lat, lon (parse as float)
+                        let lat = parseFloat(row["client.geo.location.lat"]);
+                        let lon = parseFloat(row["client.geo.location.lon"]);
+                        console.log("working!");
         
-                  // Add marker to map
-                  L.marker([lat, lon]).addTo(map)
-                    .bindPopup('<b>Location:</b> ' + row.name);
-                });
-              }).catch(function(error) {
-                console.error("Error loading the CSV file:", error);
-              });
-            };
-        }
+                        // Add marker to map
+                        let marker = L.marker([lat, lon]) 
+                        .bindPopup('<b>Location:</b> ' + row.name);
+                        // clustering 
+                        markers.addLayer(marker);
+                        });
+                    }).catch(function(error) {
+                        console.error("Error loading the CSV file:", error);
+                        });
+                    map.addLayer(markers);
+                };
+            }
         
           </script>
     </body>

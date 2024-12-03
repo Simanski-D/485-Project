@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file,session,jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file,session
 from flask_cors import CORS
 import hashlib
 import os
@@ -18,10 +18,10 @@ CORS(app)
 app.secret_key = 'dummy_key'  
 
 #user input setup and model loading
-upload_folder = './inputfiles/'
+upload_folder = './static/inputfiles/'
 os.makedirs(upload_folder, exist_ok=True)
 
-OUTPUT_FOLDER = './outputfiles/'
+OUTPUT_FOLDER = './static/outputfiles/'
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 if not os.path.exists(upload_folder):
