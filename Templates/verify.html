@@ -1,17 +1,19 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Verify Email</title>
-</head>
-<body>
-    <h1>Email Verification</h1>
-    <form method="POST" action="{{ url_for('verify') }}">
-        <label for="verification_code">Enter Verification Code:</label>
-        <input type="text" name="verification_code" required>
-        <input type="hidden" name="email" value="{{ email }}">
-        <button type="submit">Verify</button>
-    </form>
-    <p><a href="{{ url_for('login') }}">Back to Login</a></p>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Verify{% endblock %}
+
+{% block content %}
+    <div class="center-container">
+        <div class="login-createAcc-header">
+            <center><h2>Email Verification</h2></center>
+        </div>
+        <div class="form-container">
+            <form method="POST" action="{{ url_for('verify') }}">
+                <label for="verification_code">Enter Verification Code:</label>
+                <input type="text" name="verification_code" required>
+                <input type="hidden" name="email" value="{{ email }}">
+                <button type="submit">Verify</button>
+            </form>
+            <p><a href="{{ url_for('login') }}">Back to Login</a></p>
+        </div>
+    </div>
+{% endblock %}

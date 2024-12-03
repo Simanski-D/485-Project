@@ -206,27 +206,6 @@ def passwordReset():
 
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
-    if request.method == 'GET':
-        # Connect to the database
-        connection = mysql.connector.connect(**DB_CONFIG)
-        cursor = connection.cursor(dictionary=True)
-
-        try:
-            # SQL query to get emails
-            cursor.execute("""
-                            SELECT email
-                            FROM cs_admin
-                            ORDER BY email asc;
-                        """)
-            users = cursor.fetchall()
-
-            # Extract just the emails for displaying
-            emails = [user['email'] for user in users]
-
-        finally:
-            cursor.close()
-            connection.close()
-	
     if request.method == 'POST' :
 
         email = request.form.get('email')
@@ -270,6 +249,31 @@ def create_account():
             cursor.execute("INSERT INTO CS_admin (email, salt, pw_key) VALUES (%s, %s, %s)", (email, salt.hex(), hashed_password.hex()))
             connection.commit()
             return redirect(url_for('login'))
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    return render_template('createAccount.html')
+
+@app.route('/manage_account', methods=['POST', 'GET'])
+def manage_account():
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # SQL query to get the username and the count of occurrences
+            cursor.execute("""
+                            SELECT email
+                            FROM cs_admin
+                            ORDER BY email asc;
+                        """)
+            users = cursor.fetchall()  # Get all events (list of dictionaries)
+
+            # Extract just the emails for displaying
+            emails = [user['email'] for user in users]
 
         finally:
             cursor.close()
@@ -366,6 +370,7 @@ def ip_to_int(ip):
     except ValueError:
         return None
 
+# Display logs to dashboard
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
     if request.method == 'GET':
@@ -378,31 +383,30 @@ def dashboard():
             cursor.execute('SELECT DISTINCT username FROM event')
             usernames = cursor.fetchall()  # List of unique usernames
 
-            # Initialize a dictionary to store logs for each user
+            # Initialize a dictionary to store logs for each user and the count for each user
             user_logs = {}
+            log_counts = {}
 
             for user in usernames:
                 username = user['username']
 
-                # Fetch logs for each username
+                # Fetch logs and count of logs for each username
                 cursor.execute("""
-                        SELECT timestamp, geoLat, geoLon, clientIP, eventOutcome 
-                        FROM event 
-                        WHERE username = %s
-                    """, (username,))
+                    SELECT COUNT(*) AS log_count, timestamp, geoLat, geoLon, clientIP, eventOutcome 
+                    FROM event 
+                    WHERE username = %s
+                    GROUP BY username, timestamp, geoLat, geoLon, clientIP, eventOutcome
+                """, (username,))
 
                 logs = cursor.fetchall()  # List of logs for the current username
                 user_logs[username] = logs
-
-            # Store the results (username and count) in the list
-            #usernames = [{'username': event['username'], 'log_count': event['log_count'], 'timestamp': event['timestamp'], 'clientIP': event['clientIP'], 'geoLat': event['geoLat'], 'geoLon': event['geoLon'], 'eventOutcome': event['eventOutcome']} for event in events]
-
+                log_counts[username] = logs[0]['log_count'] if logs else 0  # Get log count for each username
+                
         finally:
             cursor.close()
             connection.close()
 
-    # Render HTML template with the usernames
-    return render_template('dashboard.html', usernames=usernames, user_logs=user_logs)
+    return render_template('dashboard.html', usernames=usernames, user_logs=user_logs, log_counts=log_counts)
 
 if __name__ == '__main__':
     app.run(debug=True)

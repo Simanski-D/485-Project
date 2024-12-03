@@ -1,101 +1,68 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard</title>
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
 
-        <!-- Link to CSS files -->
-        <link rel="stylesheet" href="../static/style.css" type="text/css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% block content %}
+    <!-- Sidebar Navigation -->
+    <nav id="navbar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: white; font-size: 22px; float: left; padding-left: 10px;">&times;</a>
+        <ul>
+            <li><a href="{{ url_for('dashboard')}}">Dashboard</a></li>
+            <li><a href="{{ url_for('manage_account')}}">Manage Accounts</a></li>
+            <li><a href="{{ url_for('predict')}}">Predict logs</a></li>
+        </ul>
+    </nav>
 
-        <script>
-            /* Sidebar functions */
-            function openNav() {
-                document.getElementById("navbar").style.width = "250px";
-            }
-            function closeNav() {
-                document.getElementById("navbar").style.width = "0";
-            }
-        </script>
-    </head>
+    <!-- Left and Right Containers -->
+    <div class="left-container">
+        <h3>Event Details</h3>
 
-    <body>
-        <header>
-            <button class="openbtn" onclick="openNav()">
-                <i class="fa-solid fa-bars" id="bars"></i>
-            </button>
-            <label class="logo">Cybersecurity Project</label>
-            <ul>
-                <li><a href="{{ url_for('login')}}">Logout</a></li>
-            </ul> 
-        </header>
-        
-        <div class="container">
-            <!-- Sidebar Navigation -->
-            <nav id="navbar">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: white; font-size: 22px; float: left; padding-left: 10px;">&times;</a>
-                <ul>
-                    <li><a href="{{ url_for('dashboard')}}">Dashboard</a></li>
-                    <li><a href="{{ url_for('create_account')}}">Manage Accounts</a></li>
-                    <li><a href="{{ url_for('predict')}}">Predict logs</a></li>
-                </ul>
-            </nav>
-
-            <!-- Left and Right Containers -->
-            <div class="left-container">
-                <h3>Event Details</h3>
-
-                <!-- Display each username in database -->
-                {% for user in usernames %}
-                    <div class="event">
-                        <div class="shown">
-                            <h4><button onclick="hideShow()"><i class="fa-solid fa-caret-right fa-lg" style="color: #1C1D22;"></i></button> {{ user['username'] }}</h4>
-                            <h4>username.log_count</h4>
-                        </div>
-                        <!-- Display a table of all the logs for each user -->
-                        <div id="hidden" class="hidden">
-                        {% if user_logs[user['username']] %}
-                            <table>
-                                <tr>
-                                    <th>Timestamp</th>
-                                    <th>Client IP</th>
-                                    <th>Latitude</th>
-                                    <th>Longitude</th>
-                                    <th>Outcome</th>
-                                </tr>
-                                {% for log in user_logs[user['username']] %}
-                                    <tr>
-                                        <th>{{ log.timestamp }}</th>
-                                        <th>{{ log.clientIP }}</th>
-                                        <th>{{ log.geoLat }}</th>
-                                        <th>{{ log.geoLon }}</th>
-                                        <th>{{ log.eventOutcome }}</th>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        {% else %}
-                            <p>No logs available for this user.</p>
-                        {% endif %}
-                    </div>
-
-                    <script src="{{ url_for('static', filename='script.js') }}"></script>
+        {% for user in usernames %}
+            <div class="event">
+                <div class="shown">
+                    <h4><button onclick="hideShow()"><i class="fa-solid fa-caret-right fa-lg" style="color: #1C1D22;"></i></button> {{ user['username'] }}</h4>
+                    <h4>{{ log_counts[user['username']] }}</h4>
                 </div>
+
+                <div id="hidden" class="hidden">
+                {% if user_logs[user['username']] %}
+                    <table>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Client IP</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Outcome</th>
+                        </tr>
+                        {% for log in user_logs[user['username']] %}
+                            <tr>
+                                <th>{{ log.timestamp }}</th>
+                                <th>{{ log.clientIP }}</th>
+                                <th>{{ log.geoLat }}</th>
+                                <th>{{ log.geoLon }}</th>
+                                <th>{{ log.eventOutcome }}</th>
+                            </tr>
+                        {% endfor %}
+                    </table>
                 {% else %}
-                    <li>No usernames found.</li>
-                {% endfor %}
+                    <p>No logs available for this user.</p>
+                {% endif %}
+                </div>
+
+                <script src="{{ url_for('static', filename='script.js') }}"></script>
             </div>
+        {% else %}
+            <li>No usernames found.</li>
+        {% endfor %}
+    </div>
 
-        <!-- Map container -->
-        <div class="right-container">
-            <div id="map"></div>
-            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-            <script src="{{ url_for('static', filename='map.js') }}"></script>
-        </div>
-
-        <!-- Leaflet JS and custom map script -->
+    <!-- Map container -->
+    <div class="right-container">
+        <div id="map"></div>
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script src="{{ url_for('static', filename='map.js') }}"></script>
-    </body>
-</html>
+    </div>
+
+    <!-- Leaflet JS and custom map script -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='map.js') }}"></script>
+{% endblock %}

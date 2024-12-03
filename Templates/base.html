@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{% endblock %}</title>
+
+        <!-- Link to CSS files -->
+        <link rel="stylesheet" href="../static/style.css" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+        <script>
+            /* Sidebar functions */
+            function openNav() {
+                document.getElementById("navbar").style.width = "250px";
+            }
+            function closeNav() {
+                document.getElementById("navbar").style.width = "0";
+            }
+        </script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        details {
+            margin-bottom: 10px;
+        }
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+    </head>
+
+    <body>
+        <!-- Header -->
+        <header>
+            <button class="openbtn" onclick="openNav()">
+                <i class="fa-solid fa-bars" id="bars"></i>
+            </button>
+            <label class="logo">Cybersecurity Project</label>
+            <ul>
+                <li><a href="{{ url_for('login')}}">Logout</a></li>
+            </ul>
+        </header>
+
+        <!-- Content -->
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>2024 Cybersecurity Project</p>
+        </footer>
+    </body>
+</html>
