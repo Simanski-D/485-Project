@@ -288,7 +288,6 @@ def predict():
             return render_template('predict.html')
         return render_template("predict.html")
 
-
 #Datacleaning method for user input
 def clean_data(userdf):
 	#clean timestamp

@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="../static/style.css" type="text/css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://d3js.org/d3.v5.min.js"></script> <!-- For CSV parsing -->
         <script>
             /* Sidebar functions */
             function openNav() {
@@ -49,16 +50,16 @@
                     <h4><i class="fa-solid fa-caret-right fa-lg" style="color: #1C1D22;"></i> Username</h4>
                     <h4>Count of Logs</h4>
                 </div>
-                <p id="fileName"></p>
             </div>
 
             <!-- Map container -->
             <div class="right-container">
                     <div id="map"></div>
                     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-                    <script src="static\script.js"></script>
+                   <!--- <script src="static\script.js"></script> -->
             </div>
         </div>
+        
 
         <!-- Footer -->
         <footer>
@@ -68,5 +69,42 @@
         <!-- Leaflet JS and custom map script -->
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <script>
+            // Initialize map (in global scope for later use)
+            const map = L.map('map').setView([0, -10], 1);  // Default center and zoom level
+        
+            // Add the tile layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        
+            // When the document is fully loaded, proceed with CSV loading
+            window.onload = function () {
+              // Load and parse the CSV file
+              const fileName = localStorage.getItem('fileName');
+                if(fileName !== null){
+                console.log('File name retrieved from localStorage:', fileName);
+                const fullPath = "./outputfiles/" + fileName;
+                console.log("fullpath: " , fullPath);
+                d3.csv(fullPath).then(function(data) {
+                    
+                // Loop through each row of the CSV data and plot markers
+                data.forEach(function(row) {
+                  // Ensure correct data format for lat, lon (parse as float)
+                  let lat = parseFloat(row["client.geo.location.lat"]);
+                  let lon = parseFloat(row["client.geo.location.lon"]);
+        
+                  // Add marker to map
+                  L.marker([lat, lon]).addTo(map)
+                    .bindPopup('<b>Location:</b> ' + row.name);
+                });
+              }).catch(function(error) {
+                console.error("Error loading the CSV file:", error);
+              });
+            };
+        }
+        
+          </script>
     </body>
 </html>
