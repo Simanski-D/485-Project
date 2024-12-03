@@ -10,6 +10,7 @@
   `pip install flask_cors`,
   `pip install sklearn.preprocessing`,
   `pip install scikit-learn`,
+  `pip install mysql-connector-python`,
   `pip install pandas`,
   `pip install tensorflow`
 - Under `pyvenv.cfg` double check that `include-system-site-packages = true`
