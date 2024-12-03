@@ -1,0 +1,436 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Work Sans');
+
+header {
+    background-color: #1C1D22;
+    height: 80px;
+    width: 100%;
+}
+
+header i {
+    font-size: 24px;
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+    line-height: 80px;
+    font-family: 'Work Sans';
+    padding-left: 20px;
+}
+
+header button {
+    display: none;
+}
+
+nav .closebtn {
+    display: none;
+}
+
+header ul {
+    float: right;
+    margin-right: 15px;
+}
+
+header ul li {
+    list-style: none;
+    display: inline-block;
+    line-height: 50px;
+    margin: 0 5px;
+}
+
+header ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    padding: 10px 15px;
+    cursor: pointer;
+
+    transition: all 0.3s;
+}
+
+header ul li a:hover {
+    background-color: #396B86;
+}
+
+.checkbtn {
+    float: left;
+    margin: 28px;
+    cursor: pointer;
+    display: none;
+}
+
+.openbtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 20px;
+    color: #ffffff;
+}
+
+#check {
+    display: none;
+}
+
+/*header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    background-color: #1C1D22;
+    height: 80px;
+    width: 100%;
+}
+
+header i {
+    font-size: 24px;
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+    line-height: 80px;
+    font-family: 'Work Sans';
+    padding-left: 20px;
+}
+
+header button {
+    display: none;
+}
+
+nav .closebtn {
+    display: none;
+}
+
+header ul {
+    float: right;
+    margin-right: 15px;
+}
+
+header ul li {
+    list-style: none;
+    display: inline-block;
+    line-height: 50px;
+    margin: 0 5px;
+}
+
+header ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    padding: 10px 15px;
+    cursor: pointer;
+
+    transition: all 0.3s;
+}
+
+header ul li a:hover {
+    background-color: #396B86;
+}
+
+.checkbtn {
+    float: left;
+    margin: 28px;
+    cursor: pointer;
+    display: none;
+}
+
+.openbtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 20px;
+    color: #ffffff;
+}
+
+#check {
+    display: none;
+}
+
+/*header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1C1D22;
+    color: white;
+    height: 12%;
+    line-height: 7%;
+    width: 100%;
+}*/
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: none;
+}
+
+footer {
+    background-color: #1C1D22;
+    color: white;
+    text-align: center;
+    padding: .2rem;
+    font-size: 10pt;
+}
+
+.right-header-item {
+    padding-right: 20px;
+}
+
+h2 {
+    color: #1C1D22;
+    font-family: 'Work Sans';
+}
+
+h3 {
+    color: #1C1D22;
+    font-family: 'Work Sans';
+    font-size: 21px;
+    padding-left: 20px;
+}
+
+h4 {
+    color: #1C1D22;
+    font-family: 'Nunito';
+    font-size: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+p, .input {
+    font-family: 'Nunito';
+    color: white;
+
+}
+
+.createAcc {
+    font-family: 'Nunito';
+    color: white;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+nav {
+    background-color: #264759;
+    height: 100%;
+    width: 125px;
+    top: 0;
+    left: 0;
+    overflow-x: hidden; 
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    font-family: 'Work Sans';
+}
+
+nav ul li a {
+    color: white;
+    padding: 15px 20px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+nav ul li a:hover {
+    background-color: #396B86;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 95vh;
+}
+
+.center-container {
+    width: 350px;
+    position: fixed;
+}
+
+.left-container {
+    flex: 1;
+    margin: 10px;
+    height: 95%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #adadad;
+}
+
+.left-container #createAccount{
+    flex: 1;
+    margin: 10px;
+    width: 100%;
+    height: 95%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #adadad;
+    overflow: scroll;
+}
+
+.right-container {
+    flex: 1;
+    margin: 10px;
+    height: 95%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #adadad;
+    overflow: hidden;
+}
+
+h3 .left-container {
+    font-weight: 900;
+}
+
+.top-right-container, .bottom-right-container {
+    height: 45%;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #adadad;
+    overflow: hidden;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.form-container{
+    background-color: 264759;
+    color: white;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-right: 35px;
+    padding-left: 35px;
+    border-radius: 8px;
+}
+
+.login-createAcc-header {
+    color: #1C1D22;
+}
+
+.form-container .input-box {
+    width: 100%;
+    height: 30px;
+    background: #DFDFDF;
+    border-radius: 8px;
+}
+
+.input {
+    margin-bottom: 25px;
+}
+
+.input-box input{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.form-group {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.event {
+    display: flex;
+    justify-content: space-between;
+    height: 13%;
+    margin: 15px;
+    border-radius: 8px;
+    background: #E5E5E5;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+/*Buttons*/
+
+header .button {
+    width: 5%;
+    height: 35px;
+    background: none;
+    color: white;
+    border: none;
+    outline: none;
+    font-family: 'Nunito';
+    font-size: medium;
+    margin-left: 10%;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+header .button a:hover {
+    background-color: #396B86;
+}
+
+.form-container .button {
+    width: 80%;
+    height: 35px;
+    background: #E9CC7C;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    font-family: 'Nunito';
+    font-weight: 900;
+    margin-top: 6%;
+    margin-left: 10%;
+    margin-right: 10%;
+    cursor: pointer;
+}
+
+nav ul li a:hover {
+    background-color: #396B86;
+}
+
+@media only screen and (max-width: 980px) {
+    .checkbtn {
+        display: block;
+    }
+
+    .logo {
+        padding-left: 0px;
+    }
+
+    .container {
+        display: block;
+    }
+
+    nav {
+        position: absolute;
+        top: 80px;
+    }
+
+    .left-container {
+        margin: 10px;
+        width: 100%;
+        height: 95%;
+        border-radius: 8px;
+        box-shadow: 0px 0px 8px #adadad;
+    }
+    
+    .right-container {
+        margin: 10px;
+        width: 100%;
+        height: 95%;
+        border-radius: 8px;
+        box-shadow: 0px 0px 8px #adadad;
+        overflow: hidden;
+    }
+
+    header button {
+        display: inline;
+    }
+    
+    nav .closebtn {
+        display: inline;
+    }
+}

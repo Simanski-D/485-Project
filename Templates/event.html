@@ -1,0 +1,15 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+    <div class="event">
+        {% if jobs %}
+            {% for job in jobs %}
+                {% set id = event_info['id']|string %}
+                {% set descripID = "descrip" ~ id %}
+                <h4>{{ event['username'] }}</h4>
+            {% endfor %}
+        {% else %}
+            <p>No events to display.</p>
+        {% endif %}
+    </div>
+{% endblock %}
