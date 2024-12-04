@@ -382,9 +382,7 @@ def predict():
 
         return render_template('predict.html')
 
-@app.route('/dashboard', methods=['POST', 'GET'])
-def dashboard():
-    return render_template('dashboard.html')
+
 
 #Datacleaning method for user input
 def clean_data(userdf):
