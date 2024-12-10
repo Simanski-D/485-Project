@@ -167,4 +167,3 @@ if __name__ == "__main__":
     print("Random Asian Latitude and Longitude: ", random_As_latitude(), ", ", random_As_longitude()) #working
     print("Random Australian Latitude and Longitude: ", random_Aus_latitude(), ", ", random_Aus_longitude()) #kinda working
     #print("Random Antarctica Latitude and Longitude: ", random_Ant_latitude(), ", ", random_Ant_longitude()) #working
-
