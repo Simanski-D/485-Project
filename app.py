@@ -11,7 +11,6 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-#pip install scikit-learn, pandas, tenserflow, tenserflow
 
 app = Flask(__name__)
 CORS(app)
@@ -474,44 +473,6 @@ def dashboard():
             connection.close()
 
     return render_template('dashboard.html', usernames=usernames, user_logs=user_logs, log_counts=log_counts)
-
-# Display logs to dashboard
-@app.route('/hardcodedDashboard', methods=['POST', 'GET'])
-def hardcodedDashboard():
-    if request.method == 'GET':
-        # Connect to the database
-        connection = mysql.connector.connect(**DB_CONFIG)
-        cursor = connection.cursor(dictionary=True)
-
-        try:
-            # Fetch all usernames from the event table
-            cursor.execute('SELECT DISTINCT username FROM event')
-            usernames = cursor.fetchall()  # List of unique usernames
-
-            # Initialize a dictionary to store logs for each user and the count for each user
-            user_logs = {}
-            log_counts = {}
-
-            for user in usernames:
-                username = user['username']
-
-                # Fetch logs and count of logs for each username
-                cursor.execute("""
-                    SELECT COUNT(*) AS log_count, timestamp, geoLat, geoLon, clientIP, eventOutcome 
-                    FROM event 
-                    WHERE username = %s
-                    GROUP BY username, timestamp, geoLat, geoLon, clientIP, eventOutcome
-                """, (username,))
-
-                logs = cursor.fetchall()  # List of logs for the current username
-                user_logs[username] = logs
-                log_counts[username] = logs[0]['log_count'] if logs else 0  # Get log count for each username
-                
-        finally:
-            cursor.close()
-            connection.close()
-
-    return render_template('hardcodedDashboard.html', usernames=usernames, user_logs=user_logs, log_counts=log_counts)
 
 if __name__ == '__main__':
     app.run(debug=True)
