@@ -2,7 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Simple Webpage Layout</title>
+        <title>Manage Account</title>
         <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
     </head>
     <body>
@@ -17,13 +17,17 @@
         </header>
 
         <div class="container">
-            <nav>
+            <!-- Sidebar Navigation -->
+            <nav id="navbar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: white; font-size: 22px; float: left; padding-left: 10px;">&times;</a>
                 <ul>
                     <li><a href="{{ url_for('dashboard')}}">Dashboard</a></li>
                     <li><a href="{{ url_for('create_account')}}">Manage Accounts</a></li>
+                    <li><a href="{{ url_for('predict')}}">Predict logs</a></li>
+                    <li><a href="{{ url_for('passwordResetemail')}}">Password Reset</a></li>
                 </ul>
-                
             </nav>
+
             <div class="left-container">
                 <div class="login-createAcc-header">
                     <center><h2>Create Account</h2></center>
@@ -67,10 +71,22 @@
                     </form>
                 </div>
             </div>
+
+            <!-- -->
             <div class="right-container">
-                
+                <h3>Accounts</h3>
+                {% if emails %}
+                    {% for email in emails %}
+                        <div class="event">
+                            <h4>{{ email }}</h4>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No accounts found.</p>
+                {% endif %}
             </div>
         </div>
+
         <footer>
             <a><p>2024 Cybersecurity Project</p></a>
         </footer>
