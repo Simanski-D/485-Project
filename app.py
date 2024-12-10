@@ -3,6 +3,7 @@ from flask_cors import CORS
 import hashlib
 import os
 import random
+import csv
 import smtplib
 import mysql.connector
 import ipaddress
@@ -260,6 +261,8 @@ def create_account():
 def predict():
         if request.method == 'POST' :
             print("POST request received!")
+            connection = mysql.connector.connect(**DB_CONFIG)
+            cursor = connection.cursor()
             inputfile= request.files['inputfiles']
             if inputfile:
                 
@@ -279,12 +282,45 @@ def predict():
 
                 # Process the file (clean and predict)
                 try:
-                    output_file = process_file(file_path)
-                    print(f"Processed file saved to: {output_file}")
-                    return send_file(output_file, as_attachment=True)
+                    columns_to_insert = ["client.geo.location.lat", "client.geo.location.lon", 
+                                         "okta.actor.display_name", "@timestamp"]
+                    sql = "INSERT INTO input_logs ({}) VALUES (%s, %s, %s, %s)".format(",".join(columns_to_insert))
+                    csv_reader = csv.reader(inputfile)
+                    next(csv_reader)  # Skip the header row
+
+                    for row in csv_reader:
+                        # Extract the values for the desired columns
+                        values_to_insert = [row[columns_to_insert.index(col)] for col in columns_to_insert]
+    
+                        # Execute the query
+                        cursor.execute(sql, values_to_insert)
+                except Exception as e:
+                    # DB output error: 1406 (22001): Data too long for column 'label' at row 1
+                    print(f"DB input error: {str(e)}")
+
+                connection.commit()
+                output_file = process_file(file_path)
+                print(f"Processed file saved to: {output_file}")
+                try:
+                    columns_to_insert2 = ["label"]
+                    sql2 = "INSERT INTO output_logs ({}) VALUES (%s)".format(",".join(columns_to_insert2))
+                    csv_reader2 = csv.reader(output_file)
+                    next(csv_reader2)  # Skip the header row
+                    for row in csv_reader2:
+                        # Extract the values for the desired columns
+                        values_to_insert2 = [row[columns_to_insert2.index(col)] for col in columns_to_insert2]
+        
+                        # Execute the query
+                        cursor.execute(sql2, values_to_insert2)
+                except Exception as e:
+                    #working
+                    print(f"DB output error: {str(e)}")
                 except Exception as e:
                     print(f"Error during file processing: {str(e)}")
-                return f"Error during file processing: {str(e)}", 500  # Handle any errors during processing
+                    return f"Error during file processing: {str(e)}", 500  # Handle any errors during processing
+
+                connection.commit()
+                connection.close()
             return render_template('predict.html')
         return render_template("predict.html")
 

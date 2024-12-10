@@ -11,3 +11,8 @@ function hideShow() {
         display = 1;
     }
 }
+
+function sendLogstoDB() {
+
+}
+

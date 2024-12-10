@@ -6,6 +6,9 @@
         <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
     </head>
     <body>
+        <script src="{{ url_for('static', filename='styles/prediction.js') }}"></script>
+        <script src="{{ url_for('static', filename='styles/styles/script.js') }}"></script>
+
         <header>
             <button class="openbtn" onclick="openNav()">
                 <i class="fa-solid fa-bars" id="bars"></i>
@@ -35,27 +38,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-        <script>
-                const submitted = document.getElementById('submit');
-                submitted.addEventListener('click',function(event){
-                    const fileInput = document.getElementById('file');
-
-                    // Check if a file has been selected
-                    const files = fileInput.files; 
-
-                    if (files.length > 0) {
-                        // Get the file name of the first file
-                        const fileName = files[0].name;
-                        const choppedFilename = fileName.substring(0, fileName.lastIndexOf('.'));
-                        const fileName2 = choppedFilename + "_predicted.csv";
-                        localStorage.setItem('fileName2', fileName2);  // Store the file name in localStorage
-                        console.log('File name saved to localStorage:', fileName2);
-                    // Call another function and pass the file name
-                    } else {
-                    alert('Please select a file before submitting.');
-                    }
-                });
-        </script>
+        </div>          
     </body>
 </html>

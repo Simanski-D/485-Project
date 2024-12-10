@@ -11,5 +11,7 @@
   `sklearn.preprocessing`,
   `pip install scikit-learn`,
   `pip install pandas`,
-  `pip install tensorflow`
+  `pip install tensorflow`,
+  `npm i mysql csvtojson`,
 - Under `pyvenv.cfg` double check that `include-system-site-packages = true`
+
