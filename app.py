@@ -274,6 +274,29 @@ def passwordResetemail():
 
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # SQL query to get the username and the count of occurrences
+            cursor.execute("""
+                            SELECT email
+                            FROM cs_admin
+                            ORDER BY email asc;
+                        """)
+            users = cursor.fetchall()  # Get all events (list of dictionaries)
+
+            # Extract just the emails for displaying
+            emails = [user['email'] for user in users]
+
+        finally:
+            cursor.close()
+            connection.close()
+
+        return render_template('createAccount.html', emails=emails)
+
     if request.method == 'POST' :
 
         email = request.form.get('email')
@@ -359,7 +382,39 @@ def predict():
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
-    return render_template('dashboard.html')
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # Fetch all usernames from the event table
+            cursor.execute('SELECT DISTINCT username FROM event')
+            usernames = cursor.fetchall()  # List of unique usernames
+
+            # Initialize a dictionary to store logs for each user
+            user_logs = {}
+
+            for user in usernames:
+                username = user['username']
+
+                # Fetch logs for each username
+                cursor.execute("""
+                        SELECT timestamp, geoLat, geoLon, clientIP, eventOutcome 
+                        FROM event 
+                        WHERE username = %s
+                    """, (username,))
+
+                logs = cursor.fetchall()  # List of logs for the current username
+                if logs:
+                    user_logs[username] = logs  # Store logs for the user
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    # Render HTML template with the usernames
+    return render_template('dashboard.html', usernames=usernames, user_logs=user_logs)
 
 #Datacleaning method for user input
 def clean_data(userdf):
