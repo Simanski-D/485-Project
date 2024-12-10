@@ -44,14 +44,14 @@
                         {% endfor %}
                     </table>
                 {% else %}
-                    <p>No logs available for this user.</p>
+                    <h4>No logs available for this user.</h4>
                 {% endif %}
                 </div>
 
                 <script src="{{ url_for('static', filename='script.js') }}"></script>
             </div>
         {% else %}
-            <li>No usernames found.</li>
+            <h4>No usernames found.</h4>
         {% endfor %}
     </div>
 
