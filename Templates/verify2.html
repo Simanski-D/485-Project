@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Verify Email</title>
+</head>
+<body>
+    <h1>Email Verification</h1>
+    <form method="POST" action="{{ url_for('verify2') }}">
+        <label for="verification_code">Enter Verification Code:</label>
+        <input type="text" name="verification_code" required>
+        <input type="hidden" name="email" value="{{ email }}">
+        <button type="submit">Verify</button>
+    </form>
+</body>
+</html>
