@@ -11,7 +11,6 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-#pip install scikit-learn, pandas, tenserflow, tenserflow
 
 app = Flask(__name__)
 CORS(app)
@@ -274,29 +273,6 @@ def passwordResetemail():
 
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
-    if request.method == 'GET':
-        # Connect to the database
-        connection = mysql.connector.connect(**DB_CONFIG)
-        cursor = connection.cursor(dictionary=True)
-
-        try:
-            # SQL query to get the username and the count of occurrences
-            cursor.execute("""
-                            SELECT email
-                            FROM cs_admin
-                            ORDER BY email asc;
-                        """)
-            users = cursor.fetchall()  # Get all events (list of dictionaries)
-
-            # Extract just the emails for displaying
-            emails = [user['email'] for user in users]
-
-        finally:
-            cursor.close()
-            connection.close()
-
-        return render_template('createAccount.html', emails=emails)
-
     if request.method == 'POST' :
 
         email = request.form.get('email')
@@ -347,6 +323,31 @@ def create_account():
 
     return render_template('createAccount.html')
 
+@app.route('/manage_account', methods=['POST', 'GET'])
+def manage_account():
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # SQL query to get the username and the count of occurrences
+            cursor.execute("""
+                            SELECT email
+                            FROM cs_admin
+                            ORDER BY email asc;
+                        """)
+            users = cursor.fetchall()  # Get all events (list of dictionaries)
+
+            # Extract just the emails for displaying
+            emails = [user['email'] for user in users]
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    return render_template('manageAccount.html', emails=emails)
+
 @app.route('/predict', methods=['GET','POST'])
 def predict():
         if request.method == 'POST' :
@@ -375,46 +376,12 @@ def predict():
             
         else:
             print("No file uploaded")
-            return "No file uploaded", 400  # Return error message if no file is uploaded
+            return render_template('predict.html')  # Return error message if no file is uploaded
     
 
         return render_template('predict.html')
 
-@app.route('/dashboard', methods=['POST', 'GET'])
-def dashboard():
-    if request.method == 'GET':
-        # Connect to the database
-        connection = mysql.connector.connect(**DB_CONFIG)
-        cursor = connection.cursor(dictionary=True)
 
-        try:
-            # Fetch all usernames from the event table
-            cursor.execute('SELECT DISTINCT username FROM event')
-            usernames = cursor.fetchall()  # List of unique usernames
-
-            # Initialize a dictionary to store logs for each user
-            user_logs = {}
-
-            for user in usernames:
-                username = user['username']
-
-                # Fetch logs for each username
-                cursor.execute("""
-                        SELECT timestamp, geoLat, geoLon, clientIP, eventOutcome 
-                        FROM event 
-                        WHERE username = %s
-                    """, (username,))
-
-                logs = cursor.fetchall()  # List of logs for the current username
-                if logs:
-                    user_logs[username] = logs  # Store logs for the user
-
-        finally:
-            cursor.close()
-            connection.close()
-
-    # Render HTML template with the usernames
-    return render_template('dashboard.html', usernames=usernames, user_logs=user_logs)
 
 #Datacleaning method for user input
 def clean_data(userdf):
@@ -468,6 +435,44 @@ def ip_to_int(ip):
         return int(ipaddress.ip_address(ip))
     except ValueError:
         return None
+
+# Display logs to dashboard
+@app.route('/dashboard', methods=['POST', 'GET'])
+def dashboard():
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # Fetch all usernames from the event table
+            cursor.execute('SELECT DISTINCT username FROM event')
+            usernames = cursor.fetchall()  # List of unique usernames
+
+            # Initialize a dictionary to store logs for each user and the count for each user
+            user_logs = {}
+            log_counts = {}
+
+            for user in usernames:
+                username = user['username']
+
+                # Fetch logs and count of logs for each username
+                cursor.execute("""
+                    SELECT COUNT(*) AS log_count, timestamp, geoLat, geoLon, clientIP, eventOutcome 
+                    FROM event 
+                    WHERE username = %s
+                    GROUP BY username, timestamp, geoLat, geoLon, clientIP, eventOutcome
+                """, (username,))
+
+                logs = cursor.fetchall()  # List of logs for the current username
+                user_logs[username] = logs
+                log_counts[username] = logs[0]['log_count'] if logs else 0  # Get log count for each username
+                
+        finally:
+            cursor.close()
+            connection.close()
+
+    return render_template('dashboard.html', usernames=usernames, user_logs=user_logs, log_counts=log_counts)
 
 if __name__ == '__main__':
     app.run(debug=True)
