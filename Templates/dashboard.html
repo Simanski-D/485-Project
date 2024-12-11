@@ -27,19 +27,17 @@
                 {% if user_logs[user['username']] %}
                     <table>
                         <tr>
-                            <th>Timestamp</th>
-                            <th>Client IP</th>
+                            <th>logTime</th>
+                            <th>label</th>
                             <th>Latitude</th>
                             <th>Longitude</th>
-                            <th>Outcome</th>
                         </tr>
                         {% for log in user_logs[user['username']] %}
                             <tr>
-                                <th>{{ log.timestamp }}</th>
-                                <th>{{ log.clientIP }}</th>
-                                <th>{{ log.geoLat }}</th>
-                                <th>{{ log.geoLon }}</th>
-                                <th>{{ log.eventOutcome }}</th>
+                                <th>{{ log.logTime }}</th>
+                                <th>{{ log.latitude }}</th>
+                                <th>{{ log.longitude }}</th>
+                                <th>{{ log.label }}</th>
                             </tr>
                         {% endfor %}
                     </table>

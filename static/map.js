@@ -14,12 +14,12 @@ fetch('/api/points')
         // Loop through the points and add them to the map as markers
         points.forEach(point => {
             // Format the timestamp
-            const timestamp = new Date(point.timestamp).toLocaleString();
+            const timestamp = new Date(point.logTime).toLocaleString();
 
             // Bind a popup with the label and timestamp
             L.marker(point.coords)
                 .addTo(map)
-                .bindPopup(`<b>${point.label}</b><br>Timestamp: ${timestamp}`);
+                .bindPopup(`<b>${point.label}</b><br>Timestamp: ${logTime}`);
         });
     })
     .catch(error => {

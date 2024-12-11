@@ -492,7 +492,7 @@ def dashboard():
 
         try:
             # Fetch all usernames from the event table
-            cursor.execute('SELECT DISTINCT username FROM event LIMIT 500')
+            cursor.execute('SELECT DISTINCT username FROM input_logs LIMIT 500')
             usernames = cursor.fetchall()  # List of unique usernames
 
             # Initialize a dictionary to store logs for each user and the count for each user
@@ -504,10 +504,10 @@ def dashboard():
 
                 # Fetch logs and count of logs for each username
                 cursor.execute("""
-                    SELECT COUNT(*) AS log_count, timestamp, geoLat, geoLon, clientIP, eventOutcome 
-                    FROM event 
+                    SELECT COUNT(*) AS log_count, logTime, latitude, longitude, label
+                    FROM input_logs 
                     WHERE username = %s
-                    GROUP BY username, timestamp, geoLat, geoLon, clientIP, eventOutcome
+                    GROUP BY username, logTime, latitude, longitude, label
                     LIMIT 500
                 """, (username,))
 
@@ -529,7 +529,7 @@ def get_points():
         cursor = connection.cursor(dictionary=True)
 
         try:
-            cursor.execute('SELECT username, timestamp, geoLat, geoLon FROM event LIMIT 500')
+            cursor.execute('SELECT username, logTime, latitude, longitude FROM input_logs LIMIT 500')
             points = cursor.fetchall()
 
         finally:
@@ -537,7 +537,7 @@ def get_points():
             connection.close()
 
         # Convert points to a list of dictionaries
-        points_list = [{"coords": [point['geoLat'], point['geoLon']], "label": point['username'], "timestamp": point['timestamp']} for point in points]
+        points_list = [{"coords": [point['latitude'], point['longitude']], "label": point['username'], "logTime": point['logTime']} for point in points]
     return jsonify(points_list)
 
 if __name__ == '__main__':
