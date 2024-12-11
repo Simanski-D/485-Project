@@ -530,7 +530,7 @@ def get_points():
         cursor = connection.cursor(dictionary=True)
 
         try:
-            cursor.execute('SELECT latitude as geoLat, longitude as geoLon FROM input_logs')
+            cursor.execute('SELECT latitude as geoLat, longitude as geoLon, username, logTime as timestamp FROM input_logs')
             points = cursor.fetchall()
 
         finally:
@@ -538,7 +538,7 @@ def get_points():
             connection.close()
 
         # Convert points to a list of dictionaries
-        points_list = [{"coords": [point['geoLat'], point['geoLon']]} for point in points]
+        points_list = [{"coords": [point['geoLat'], point['geoLon']], "label": point['username'], "timestamp": point['timestamp']} for point in points]
     return jsonify(points_list)
 
 if __name__ == '__main__':

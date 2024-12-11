@@ -188,7 +188,7 @@ nav .closebtn {
 
 .container-simple {
     display: flex;
-    height: 90%;
+    height: 80vh;
     align-items: center;
     justify-content: center;
 }
