@@ -31,15 +31,15 @@
                             <th>Client IP</th>
                             <th>Latitude</th>
                             <th>Longitude</th>
-                            <th>Label</th>
+                            <th>Outcome</th>
                         </tr>
                         {% for log in user_logs[user['username']] %}
                             <tr>
-                                <th>{{ log.logTime }}</th>
-                                <th>{{ log.latitude }}</th>
-                                <th>{{ log.longitude }}</th>
-                                <th>{{ log.ip }}</th>
-                                <th>{{ log.label }}</th>
+                                <th>{{ log.timestamp }}</th>
+                                <th>{{ log.clientIP }}</th>
+                                <th>{{ log.geoLat }}</th>
+                                <th>{{ log.geoLon }}</th>
+                                <th>{{ log.eventOutcome }}</th>
                             </tr>
                         {% endfor %}
                     </table>

@@ -494,7 +494,7 @@ def dashboard():
 
         try:
             # Fetch all usernames from the event table
-            cursor.execute('SELECT DISTINCT username FROM input_logs LIMIT 500')
+            cursor.execute('SELECT DISTINCT username FROM input_logs')
             usernames = cursor.fetchall()  # List of unique usernames
 
             # Initialize a dictionary to store logs for each user and the count for each user
@@ -506,17 +506,16 @@ def dashboard():
 
                 # Fetch logs and count of logs for each username
                 cursor.execute("""
-                    SELECT COUNT(*) AS log_count, logTime, latitude, longitude, ip, label
+                    SELECT COUNT(*) AS log_count, logTime as timestamp, latitude as geoLat, longitude as geoLon, ip as clientIP, label as eventOutcome 
                     FROM input_logs 
                     WHERE username = %s
-                    GROUP BY username, logTime, latitude, longitude,ip, label
-                    LIMIT 500
+                    GROUP BY username, timestamp, geoLat, geoLon, clientIP, eventOutcome
                 """, (username,))
 
                 logs = cursor.fetchall()  # List of logs for the current username
                 user_logs[username] = logs
                 log_counts[username] = logs[0]['log_count'] if logs else 0  # Get log count for each username
-                
+
         finally:
             cursor.close()
             connection.close()
@@ -531,7 +530,7 @@ def get_points():
         cursor = connection.cursor(dictionary=True)
 
         try:
-            cursor.execute('SELECT username, logTime, latitude, longitude, ip FROM input_logs LIMIT 500')
+            cursor.execute('SELECT latitude as geoLat, longitude as geoLon FROM input_logs')
             points = cursor.fetchall()
 
         finally:
@@ -539,7 +538,7 @@ def get_points():
             connection.close()
 
         # Convert points to a list of dictionaries
-        points_list = [{"coords": [point['latitude'], point['longitude']], "Username": point['username'], "Timestamp": point['logTime'], "IP": point['ip']} for point in points]
+        points_list = [{"coords": [point['geoLat'], point['geoLon']]} for point in points]
     return jsonify(points_list)
 
 if __name__ == '__main__':

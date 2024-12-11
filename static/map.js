@@ -19,7 +19,7 @@ fetch('/api/points')
             // Bind a popup with the label and timestamp
             L.marker(point.coords)
                 .addTo(map)
-                .bindPopup(`<b>${point.label}</b><br>Timestamp: ${logTime}`);
+                {point.label};
         });
     })
     .catch(error => {
