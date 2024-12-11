@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file,session
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file,session, jsonify
 from flask_cors import CORS
 import hashlib
 import os
@@ -273,53 +273,71 @@ def predict():
                 session['file_path'] = file_path
                 
                 print(f"File path stored in session: {session.get('file_path')}")
-                with open(file_path, 'r', encoding='utf-8') as file:
-                    file_contents = file.read()           
+                           
                 # Check if the file is empty
                 if os.stat(file_path).st_size == 0:
                     print(f"The uploaded file {inputfile.filename} is empty.")
                     return "Error: The uploaded file is empty.", 400  # Return error if the file is empty
-
-                # Process the file (clean and predict)
+                
+                #SEND INPUT LOGS TO input_logs TABLE
                 try:
-                    columns_to_insert = ["client.geo.location.lat", "client.geo.location.lon", 
-                                         "okta.actor.display_name", "@timestamp"]
-                    sql = "INSERT INTO input_logs ({}) VALUES (%s, %s, %s, %s)".format(",".join(columns_to_insert))
-                    csv_reader = csv.reader(inputfile)
-                    next(csv_reader)  # Skip the header row
 
-                    for row in csv_reader:
-                        # Extract the values for the desired columns
-                        values_to_insert = [row[columns_to_insert.index(col)] for col in columns_to_insert]
-    
-                        # Execute the query
-                        cursor.execute(sql, values_to_insert)
+
+                    df = pd.read_csv(file_path, skip_blank_lines=True)
+                    df = df.where((pd.notnull(df)), None)
+
+                    columns_to_insert=df[['timestamp', 'client.geo.location.lat', 'client.geo.location.lon', 'client.user.full_name']]
+
+                    for _, row in columns_to_insert.iterrows():
+                        col1_value = row['timestamp']
+                        col2_value = row['client.geo.location.lat']
+                        col3_value = row['client.geo.location.lon']
+                        col4_value = row['client.user.full_name']
+
+                        if col1_value is None or col2_value is None or col3_value is None or col4_value is None:
+                            continue  # Skip this row if any value is missing
+
+                
+                        query = """
+                        INSERT INTO input_logs (`logTime`, `latitude`, `longitude`, `username`) 
+                        VALUES (%s, %s, %s,%s)
+                        """
+                        cursor.execute(query, (col1_value, col2_value, col3_value, col4_value))
+
+                    connection.commit()
+
                 except Exception as e:
-                    # DB output error: 1406 (22001): Data too long for column 'label' at row 1
-                    print(f"DB input error: {str(e)}")
+                    return jsonify({"error": str(e)})
+                    
 
-                connection.commit()
+                #CLEANING INPUT FILE AND MAKING AN OUTPUT FILE
                 output_file = process_file(file_path)
                 print(f"Processed file saved to: {output_file}")
+              
                 try:
-                    columns_to_insert2 = ["label"]
-                    sql2 = "INSERT INTO output_logs ({}) VALUES (%s)".format(",".join(columns_to_insert2))
-                    csv_reader2 = csv.reader(output_file)
-                    next(csv_reader2)  # Skip the header row
-                    for row in csv_reader2:
-                        # Extract the values for the desired columns
-                        values_to_insert2 = [row[columns_to_insert2.index(col)] for col in columns_to_insert2]
-        
-                        # Execute the query
-                        cursor.execute(sql2, values_to_insert2)
+                    df2 = pd.read_csv(output_file) 
+
+                    columns_to_insert2 = df2[['prediction_labels']] 
+
+                    for _, row in columns_to_insert2.iterrows():
+                        output_col_value = row['prediction_labels']
+
+                        query2 = """
+                        INSERT INTO output_logs(`label`)
+                        VALUES(%s)
+                        """
+
+                        cursor.execute(query2, (output_col_value,))
+                        connection.commit()
+
                 except Exception as e:
-                    #working
-                    print(f"DB output error: {str(e)}")
-                except Exception as e:
-                    print(f"Error during file processing: {str(e)}")
-                    return f"Error during file processing: {str(e)}", 500  # Handle any errors during processing
+                    return jsonify({"error": str(e)})
+                
+                cursor.callproc('labelMerge', ())
+
 
                 connection.commit()
+                cursor.close()
                 connection.close()
             return render_template('predict.html')
         return render_template("predict.html")
@@ -327,16 +345,15 @@ def predict():
 #Datacleaning method for user input
 def clean_data(userdf):
 	#clean timestamp
-	userdf['@timestamp'] = pd.to_datetime(userdf['@timestamp'].str.replace(" @ ", " "), format="%b %d, %Y %H:%M:%S.%f")
-	userdf['Numeric_Timestamp'] = userdf['@timestamp'].apply(lambda x: x.timestamp() if pd.notna(x) else 0)
+	userdf['timestamp'] = pd.to_datetime(userdf['timestamp'].str.replace(" @ ", " "), format="%b %d, %Y %H:%M:%S.%f")
+	userdf['Numeric_Timestamp'] = userdf['timestamp'].apply(lambda x: x.timestamp() if pd.notna(x) else 0)
 	eps = 0.001 # 0 => 0.1¢
 	userdf['Log_Numeric_Timestamp'] = np.log(userdf.pop('Numeric_Timestamp')+eps)
 	columns_to_keep2 =['Log_Numeric_Timestamp', 'client.geo.location.lat', 'client.geo.location.lon','client.ip_as_int', 'event.outcome']
 	#Clean Event.Outcome and Class
 	userdf['event.outcome'] = userdf['event.outcome'].replace('failure', 1).replace('success', 0).replace('unknown',2)
 	#Clean lat and lon
-	#userdf['client.geo.location.lat'] = userdf['client.geo.location.lat'].str.encode('utf-8')
-	#userdf['client.geo.location.lon'] = userdf['client.geo.location.lon'].str.encode('utf-8')
+	
 
 	userdf['client.ip'] = userdf['client.ip'].str.encode('utf-8')
 	userdf['client.geo.location.lat'] = pd.to_numeric(userdf['client.geo.location.lat'],errors='coerce')
@@ -352,7 +369,7 @@ def clean_data(userdf):
 
 def model_predict(userdf):
     predictions = model_prototype.predict(userdf)
-    userdf['prediction_labels'] = np.where(predictions > 0.8, 'Good', 'Bad')
+    userdf['prediction_labels'] = np.where(predictions > 0.5, 'Good', 'Bad')
     return userdf
 
 def process_file(filepath):
