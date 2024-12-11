@@ -374,23 +374,24 @@ def predict():
                     df = pd.read_csv(file_path, skip_blank_lines=True)
                     df = df.where((pd.notnull(df)), None)
 
-                    columns_to_insert=df[['timestamp', 'client.geo.location.lat', 'client.geo.location.lon', 'client.user.full_name']]
+                    columns_to_insert=df[['timestamp', 'client.geo.location.lat', 'client.geo.location.lon', 'client.user.full_name', 'client.ip']]
 
                     for _, row in columns_to_insert.iterrows():
                         col1_value = row['timestamp']
                         col2_value = row['client.geo.location.lat']
                         col3_value = row['client.geo.location.lon']
                         col4_value = row['client.user.full_name']
+                        col5_value = row['client.ip']
 
-                        if col1_value is None or col2_value is None or col3_value is None or col4_value is None:
+                        if col1_value is None or col2_value is None or col3_value is None or col4_value is None or col5_value is None:
                             continue  # Skip this row if any value is missing
 
                 
                         query = """
-                        INSERT INTO input_logs (`logTime`, `latitude`, `longitude`, `username`) 
-                        VALUES (%s, %s, %s,%s)
+                        INSERT INTO input_logs (`logTime`, `latitude`, `longitude`, `username`, `ip`) 
+                        VALUES (%s, %s, %s, %s, %s)
                         """
-                        cursor.execute(query, (col1_value, col2_value, col3_value, col4_value))
+                        cursor.execute(query, (col1_value, col2_value, col3_value, col4_value, col5_value))
 
                     connection.commit()
 
@@ -421,6 +422,7 @@ def predict():
                 except Exception as e:
                     return jsonify({"error": str(e)})
                 
+                #Calls labelMerge SP to put predicted label into input_logs
                 cursor.callproc('labelMerge', ())
 
 
@@ -504,10 +506,10 @@ def dashboard():
 
                 # Fetch logs and count of logs for each username
                 cursor.execute("""
-                    SELECT COUNT(*) AS log_count, logTime, latitude, longitude, label
+                    SELECT COUNT(*) AS log_count, logTime, latitude, longitude, ip, label
                     FROM input_logs 
                     WHERE username = %s
-                    GROUP BY username, logTime, latitude, longitude, label
+                    GROUP BY username, logTime, latitude, longitude,ip, label
                     LIMIT 500
                 """, (username,))
 
@@ -529,7 +531,7 @@ def get_points():
         cursor = connection.cursor(dictionary=True)
 
         try:
-            cursor.execute('SELECT username, logTime, latitude, longitude FROM input_logs LIMIT 500')
+            cursor.execute('SELECT username, logTime, latitude, longitude, ip FROM input_logs LIMIT 500')
             points = cursor.fetchall()
 
         finally:
@@ -537,7 +539,7 @@ def get_points():
             connection.close()
 
         # Convert points to a list of dictionaries
-        points_list = [{"coords": [point['latitude'], point['longitude']], "label": point['username'], "logTime": point['logTime']} for point in points]
+        points_list = [{"coords": [point['latitude'], point['longitude']], "Username": point['username'], "Timestamp": point['logTime'], "IP": point['ip']} for point in points]
     return jsonify(points_list)
 
 if __name__ == '__main__':
