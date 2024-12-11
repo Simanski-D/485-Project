@@ -284,6 +284,7 @@ def create_account():
                             SELECT email
                             FROM cs_admin
                             ORDER BY email asc;
+                            LIMIT 500
                         """)
             users = cursor.fetchall()  # Get all events (list of dictionaries)
 
@@ -444,7 +445,7 @@ def dashboard():
 
         try:
             # Fetch all usernames from the event table
-            cursor.execute('SELECT DISTINCT username FROM event')
+            cursor.execute('SELECT DISTINCT username FROM event LIMIT 500')
             usernames = cursor.fetchall()  # List of unique usernames
 
             # Initialize a dictionary to store logs for each user and the count for each user
@@ -460,6 +461,7 @@ def dashboard():
                     FROM event 
                     WHERE username = %s
                     GROUP BY username, timestamp, geoLat, geoLon, clientIP, eventOutcome
+                    LIMIT 500
                 """, (username,))
 
                 logs = cursor.fetchall()  # List of logs for the current username
@@ -480,7 +482,7 @@ def get_points():
         cursor = connection.cursor(dictionary=True)
 
         try:
-            cursor.execute('SELECT username, timestamp, geoLat, geoLon FROM event')
+            cursor.execute('SELECT username, timestamp, geoLat, geoLon FROM event LIMIT 500')
             points = cursor.fetchall()
 
         finally:

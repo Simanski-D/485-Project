@@ -1,5 +1,5 @@
 // Initialize the map and set its view to a specific location and zoom level
-const map = L.map('map').setView([0, -10], 2);  // Starting view of the map
+const map = L.map('map').setView([0, -10], 1);  // Starting view of the map
 
 // Add a tile layer (OpenStreetMap)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
