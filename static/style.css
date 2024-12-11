@@ -18,9 +18,14 @@ header i {
 .logo {
     color: white;
     font-size: 24px;
-    line-height: 80px;
     font-family: 'Work Sans';
+    padding-left: 10px;
+}
+
+.logo-icon {
+    width: 14%;
     padding-left: 20px;
+    padding-top: 16px;
 }
 
 header button {
