@@ -11,11 +11,13 @@
                 <i class="fa-solid fa-bars" id="bars"></i>
             </button>
             <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
-            <a class = "pwordRe" href = "{{ url_for('passwordReset')}}" style = "color:white">Reset Password</a>
+            <ul>
+                <li><a class = "pwordRe" href = "{{ url_for('passwordReset')}}" style = "color:white">Reset Password</a></li>
+            </ul>
         </header>
 
-        <div class="container">
-            <div class="center-container">
+        <div class="container-simple">
+            <div class="center-container-simple">
                 <div class="login-createAcc-header">
                     <center><h2>Login</h2></center>
                 </div>

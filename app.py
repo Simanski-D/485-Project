@@ -271,7 +271,7 @@ def passwordResetemail():
         
     return render_template('passwordResetemail.html')
 
-@app.route('/manage_account', methods=['POST', 'GET'])
+@app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
     if request.method == 'GET':
         # Connect to the database
@@ -305,11 +305,11 @@ def create_account():
 
         if not email.endswith("@uwec.edu"):
             flash("Email must end with @uwec.edu")
-            return redirect(url_for('manage_account'))
+            return redirect(url_for('create_account'))
         
         if password != confirm_password:
             flash("Passwords do not match")  # Flash the message
-            return redirect(url_for('manage_account'))
+            return redirect(url_for('create_account'))
         
 
         # Add database insertion logic
