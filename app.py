@@ -271,8 +271,31 @@ def passwordResetemail():
         
     return render_template('passwordResetemail.html')
 
-@app.route('/create_account', methods=['POST', 'GET'])
+@app.route('/manage_account', methods=['POST', 'GET'])
 def create_account():
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # SQL query to get the username and the count of occurrences
+            cursor.execute("""
+                            SELECT email
+                            FROM cs_admin
+                            ORDER BY email asc;
+                        """)
+            users = cursor.fetchall()  # Get all events (list of dictionaries)
+
+            # Extract just the emails for displaying
+            emails = [user['email'] for user in users]
+
+        finally:
+            cursor.close()
+            connection.close()
+
+        return render_template('createAccount.html', emails=emails)
+
     if request.method == 'POST' :
 
         email = request.form.get('email')
@@ -282,11 +305,11 @@ def create_account():
 
         if not email.endswith("@uwec.edu"):
             flash("Email must end with @uwec.edu")
-            return redirect(url_for('create_account'))
+            return redirect(url_for('manage_account'))
         
         if password != confirm_password:
             flash("Passwords do not match")  # Flash the message
-            return redirect(url_for('create_account'))
+            return redirect(url_for('manage_account'))
         
 
         # Add database insertion logic
@@ -322,31 +345,6 @@ def create_account():
             connection.close()
 
     return render_template('createAccount.html')
-
-@app.route('/manage_account', methods=['POST', 'GET'])
-def manage_account():
-    if request.method == 'GET':
-        # Connect to the database
-        connection = mysql.connector.connect(**DB_CONFIG)
-        cursor = connection.cursor(dictionary=True)
-
-        try:
-            # SQL query to get the username and the count of occurrences
-            cursor.execute("""
-                            SELECT email
-                            FROM cs_admin
-                            ORDER BY email asc;
-                        """)
-            users = cursor.fetchall()  # Get all events (list of dictionaries)
-
-            # Extract just the emails for displaying
-            emails = [user['email'] for user in users]
-
-        finally:
-            cursor.close()
-            connection.close()
-
-    return render_template('manageAccount.html', emails=emails)
 
 @app.route('/predict', methods=['GET','POST'])
 def predict():
