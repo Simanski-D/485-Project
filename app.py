@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file, jsonify
 from flask_cors import CORS
 import hashlib
 import os
@@ -471,6 +471,25 @@ def dashboard():
             connection.close()
 
     return render_template('dashboard.html', usernames=usernames, user_logs=user_logs, log_counts=log_counts)
+
+@app.route('/api/points')
+def get_points():
+    if request.method == 'GET':
+        # API endpoint to return points as JSON
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            cursor.execute('SELECT geoLat, geoLon FROM event')
+            points = cursor.fetchall()
+
+        finally:
+            cursor.close()
+            connection.close()
+
+        # Convert points to a list of dictionaries
+        points_list = [{"coords": [point['geoLat'], point['geoLon']]} for point in points]
+    return jsonify(points_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
