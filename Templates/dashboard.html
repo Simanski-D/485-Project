@@ -19,7 +19,7 @@
         {% for user in usernames %}
             <div class="event">
                 <div class="shown">
-                    <h4><button onclick="hideShow()"><i class="fa-solid fa-caret-right fa-lg" style="color: #1C1D22;"></i></button> {{ user['username'] }}</h4>
+                    <h4>{{ user['username'] }}</h4>
                     <h4>{{ log_counts[user['username']] }}</h4>
                 </div>
 
