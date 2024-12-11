@@ -2,7 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Simple Webpage Layout</title>
+        <title>Manage Accounts</title>
         <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
     </head>
     <body>
@@ -10,22 +10,24 @@
             <button class="openbtn" onclick="openNav()">
                 <i class="fa-solid fa-bars" id="bars"></i>
             </button>
-            <label class="logo">Cybersecurity Project</label>
+            <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
             <ul>
                 <li><a href="{{ url_for('login')}}">Logout</a></li>
             </ul> 
         </header>
 
         <div class="container">
-            <nav>
+            <!-- Sidebar Navigation -->
+            <nav id="navbar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: white; font-size: 22px; float: left; padding-left: 10px;">&times;</a>
                 <ul>
                     <li><a href="{{ url_for('dashboard')}}">Dashboard</a></li>
                     <li><a href="{{ url_for('create_account')}}">Manage Accounts</a></li>
                     <li><a href="{{ url_for('predict')}}">Predict logs</a></li>
                 </ul>
-                
             </nav>
-            <div class="left-container">
+
+            <div class="left-container-create-account">
                 <div class="login-createAcc-header">
                     <center><h2>Create Account</h2></center>
                 </div>
@@ -47,20 +49,20 @@
                         <div class="form-group">
                             <label class="input" for="username">Email</label>
                             <div class="input-box">  
-                                <input type="email" id="username" name="email" required placeholder="Enter your email">
+                                <input type="email" id="username" name="email">
                                 <span id="emailError" style="color:red"></span> <!-- Error display (for JS) -->
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="input" for="password">Password</label>
                             <div class="input-box">
-                                <input type="password" id="password" name="pw_key" required placeholder="Enter your password">
+                                <input type="password" id="password" name="pw_key">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="input" for="confirm-password">Re-Enter Password</label>
                             <div class="input-box">
-                                <input type="password" id="confirm-password" name="confirm_pw" required placeholder="Re-enter your password">
+                                <input type="password" id="confirm-password" name="confirm_pw">
                                 <span id="passwordError" style="color:red"></span> <!-- Password error display -->
                             </div>
                         </div>
@@ -69,7 +71,16 @@
                 </div>
             </div>
             <div class="right-container">
-                
+                <h3>Accounts</h3>
+                {% if emails %}
+                    {% for email in emails %}
+                        <div class="account-list">
+                            <h4>{{ email }}</h4>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No accounts found.</p>
+                {% endif %}
             </div>
         </div>
         <footer>

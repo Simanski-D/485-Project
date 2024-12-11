@@ -2,7 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Simple Webpage Layout</title>
+        <title>Login</title>
         <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
     </head>
     <body>
@@ -10,11 +10,14 @@
             <button class="openbtn" onclick="openNav()">
                 <i class="fa-solid fa-bars" id="bars"></i>
             </button>
-            <label class="logo">Cybersecurity Project</label>
+            <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
+            <ul>
+                <li><a class = "pwordRe" href = "{{ url_for('passwordReset')}}" style = "color:white">Reset Password</a></li>
+            </ul>
         </header>
 
-        <div class="container">
-            <div class="center-container">
+        <div class="container-simple">
+            <div class="center-container-simple">
                 <div class="login-createAcc-header">
                     <center><h2>Login</h2></center>
                 </div>

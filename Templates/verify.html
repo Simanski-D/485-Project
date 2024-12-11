@@ -1,17 +1,37 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Verify Email</title>
-</head>
-<body>
-    <h1>Email Verification</h1>
-    <form method="POST" action="{{ url_for('verify') }}">
-        <label for="verification_code">Enter Verification Code:</label>
-        <input type="text" name="verification_code" required>
-        <input type="hidden" name="email" value="{{ email }}">
-        <button type="submit">Verify</button>
-    </form>
-    <p><a href="{{ url_for('login') }}">Back to Login</a></p>
-</body>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Verify</title>
+        <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
+    </head>
+    <body>
+        <header>
+            <button class="openbtn" onclick="openNav()">
+                <i class="fa-solid fa-bars" id="bars"></i>
+            </button>
+            <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
+        </header>
+
+        <div class="simple-page-container">
+            <div class="simple-page-center-container">
+                <div class="login-createAcc-header">
+                    <center><h2>Email Verification</h2></center>
+                </div>
+                <div class="form-container">
+                    <form method="POST" action="{{ url_for('verify') }}">
+                        <label for="verification_code">Enter Verification Code:</label>
+                        <input type="text" name="verification_code" required>
+                        <input type="hidden" name="email" value="{{ email }}">
+                        <button type="submit" class="verifyButton">Verify</button>
+                    </form>
+                    <center><p><a href="{{ url_for('login') }}">Back to Login</a></p></center>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <a><p>2024 Cybersecurity Project</p></a>
+        </footer>
+    </body>
 </html>

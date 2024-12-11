@@ -14,9 +14,14 @@ header i {
 .logo {
     color: white;
     font-size: 24px;
-    line-height: 80px;
     font-family: 'Work Sans';
+    padding-left: 10px;
+}
+
+.logo-icon {
+    width: 14%;
     padding-left: 20px;
+    padding-top: 16px;
 }
 
 header button {
@@ -71,92 +76,6 @@ header ul li a:hover {
 #check {
     display: none;
 }
-
-/*header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    background-color: #1C1D22;
-    height: 80px;
-    width: 100%;
-}
-
-header i {
-    font-size: 24px;
-}
-
-.logo {
-    color: white;
-    font-size: 24px;
-    line-height: 80px;
-    font-family: 'Work Sans';
-    padding-left: 20px;
-}
-
-header button {
-    display: none;
-}
-
-nav .closebtn {
-    display: none;
-}
-
-header ul {
-    float: right;
-    margin-right: 15px;
-}
-
-header ul li {
-    list-style: none;
-    display: inline-block;
-    line-height: 50px;
-    margin: 0 5px;
-}
-
-header ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 17px;
-    padding: 10px 15px;
-    cursor: pointer;
-
-    transition: all 0.3s;
-}
-
-header ul li a:hover {
-    background-color: #396B86;
-}
-
-.checkbtn {
-    float: left;
-    margin: 28px;
-    cursor: pointer;
-    display: none;
-}
-
-.openbtn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-left: 20px;
-    color: #ffffff;
-}
-
-#check {
-    display: none;
-}
-
-/*header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1C1D22;
-    color: white;
-    height: 12%;
-    line-height: 7%;
-    width: 100%;
-}*/
 
 body {
     font-family: Arial, sans-serif;
@@ -218,11 +137,11 @@ p, .input {
 
 nav {
     background-color: #264759;
-    height: 100%;
+    height: auto;
     width: 125px;
     top: 0;
     left: 0;
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 nav ul {
@@ -248,14 +167,27 @@ nav ul li a:hover {
 
 .container {
     display: flex;
+    height: auto;
+}
+
+.container-simple {
+    display: flex;
+    height: 90%;
     align-items: center;
     justify-content: center;
-    height: 95vh;
 }
 
 .center-container {
+    flex: 1;
     width: 350px;
     position: fixed;
+}
+
+.center-container-simple {
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    width: 350px;
 }
 
 .left-container {
@@ -266,20 +198,23 @@ nav ul li a:hover {
     box-shadow: 0px 0px 8px #adadad;
 }
 
-.left-container #createAccount{
+.left-container-create-account {
+    display: flex;
     flex: 1;
     margin: 10px;
     width: 100%;
-    height: 95%;
+    height: auto;
     border-radius: 8px;
     box-shadow: 0px 0px 8px #adadad;
-    overflow: scroll;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .right-container {
     flex: 1;
     margin: 10px;
-    height: 95%;
+    height: 90vh;
     border-radius: 8px;
     box-shadow: 0px 0px 8px #adadad;
     overflow: hidden;
@@ -304,8 +239,10 @@ h3 .left-container {
 }
 
 .form-container{
-    background-color: 264759;
+    flex: 1;
+    background-color: #264759;
     color: white;
+    width: 350px;
     padding-top: 10px;
     padding-bottom: 5px;
     padding-right: 35px;
@@ -342,14 +279,34 @@ h3 .left-container {
 }
 
 .event {
-    display: flex;
-    justify-content: space-between;
-    height: 13%;
+    display: block;
+    height: auto;
     margin: 15px;
     border-radius: 8px;
     background: #E5E5E5;
-    overflow: hidden;
+}
+
+.event .shown {
+    display: flex;
     justify-content: space-between;
+}
+
+.event .hidden table{
+    font-family: 'Nunito';
+    font-size: 14px;
+    font-weight: 200;
+    color: #1C1D22;
+}
+
+.account-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    margin: 15px;
+    border-radius: 8px;
+    background: #E5E5E5;
+    width: auto;
 }
 
 /*Buttons*/
@@ -411,12 +368,12 @@ nav ul li a:hover {
 
     .left-container {
         margin: 10px;
-        width: 100%;
+        width: auto;
         height: 95%;
         border-radius: 8px;
         box-shadow: 0px 0px 8px #adadad;
     }
-    
+
     .right-container {
         margin: 10px;
         width: 100%;
@@ -429,7 +386,7 @@ nav ul li a:hover {
     header button {
         display: inline;
     }
-    
+
     nav .closebtn {
         display: inline;
     }

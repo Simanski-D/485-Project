@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file,session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file, jsonify
 from flask_cors import CORS
 import hashlib
 import os
@@ -12,7 +12,6 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-#pip install scikit-learn, pandas, tenserflow, tenserflow
 
 app = Flask(__name__)
 CORS(app)
@@ -46,14 +45,14 @@ def generate_verification_code():
 
 # Function to send verification email
 def send_verification_email(email, verification_code):
-    sender_email = "kadinstars@gmail.com"  # Replace with your sender email
-    sender_password = "ogdd mayq hzbq bfvd"  # Replace with your app password
+    sender_email = "kadinstars@gmail.com"
+    sender_password = "ogdd mayq hzbq bfvd"
     subject = "Your Verification Code"
     message = f"Subject: {subject}\n\nYour verification code is: {verification_code}"
 
     smtp_servers = [
-        ("smtp.gmail.com", 587),  # Try TLS
-        ("smtp.gmail.com", 465),  # Try SSL
+        ("smtp.gmail.com", 587),  # TLS
+        ("smtp.gmail.com", 465),  # SSL
     ]
 
     for server_address, port in smtp_servers:
@@ -77,6 +76,7 @@ def send_verification_email(email, verification_code):
     # If all ports fail
     print("Failed to send email on all available ports.")
 
+#Login html page functionality
 @app.route('/', methods=['POST', 'GET'])
 def login():
 
@@ -93,48 +93,48 @@ def login():
          #   cursor.execute("SELECT email, salt, pw_key FROM CS_admin WHERE email = %s", (email,))
           #  result_cs_admin = cursor.fetchone()
 
-#            cursor.execute("SELECT email FROM email_only WHERE email = %s", (email,))
- #           result_email_only = cursor.fetchone()
-#
- #           if result_cs_admin is None or result_email_only is None:
-  #              flash("Invalid email or password")
-   #             return redirect(url_for('login'))
-#
- #           db_email = result_cs_admin[0]  # We can take it from either result
-  #          db_salt = result_cs_admin[1]
-   #         db_hashed_password = result_cs_admin[2]
-#
- #           # Hash the provided password with the stored salt
-  #          password_bytes = password.encode('utf-8')
-   #         salt_bytes = bytes.fromhex(db_salt)
-    #        hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt_bytes, 100000, dklen=32)
-#
-           # Compare the hashed password with the one in the database
-  #          if hashed_password.hex() == db_hashed_password:
+            cursor.execute("SELECT email FROM email_only WHERE email = %s", (email,))
+            result_email_only = cursor.fetchone()
+
+            if result_cs_admin is None or result_email_only is None:
+                flash("Invalid email or password")
+                return redirect(url_for('login'))
+
+            db_email = result_cs_admin[0]
+            db_salt = result_cs_admin[1]
+            db_hashed_password = result_cs_admin[2]
+
+            # Hash the provided password with the stored salt
+            password_bytes = password.encode('utf-8')
+            salt_bytes = bytes.fromhex(db_salt)
+            hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt_bytes, 100000, dklen=32)
+
+            # Compare the hashed password with the one in the database
+            if hashed_password.hex() == db_hashed_password:
                 # Generate a verification code and store it in the database
  #               verification_code = generate_verification_code()
   #              send_verification_email(email, verification_code)
 #
                 # Store the verification code in a new table
-  #              cursor.execute("""INSERT INTO email_verification(email, verification_code) VALUES (%s, %s)ON DUPLICATE KEY UPDATE verification_code = %s;
-   #             """, (email, verification_code, verification_code))
-#
- #               connection.commit()
-  #              flash("A verification code has been sent to your email.")
-   #             return redirect(url_for('verify', email=email))
-#
-#
- #           else:
-  #              # If the password is incorrect, flash a message
-   #             flash("Invalid email or password")
-    #            return redirect(url_for('login'))
-#
- #       finally:
-  #          cursor.close()
-   #         connection.close()
-#
-    return render_template('dashboard.html')
+                cursor.execute("""INSERT INTO email_verification(email, verification_code) VALUES (%s, %s)ON DUPLICATE KEY UPDATE verification_code = %s;
+                """, (email, verification_code, verification_code))
 
+                connection.commit()
+                flash("A verification code has been sent to your email.")
+                return redirect(url_for('verify', email=email))
+
+            else:
+                # If the password is incorrect, flash a message
+                flash("Invalid email or password")
+                return redirect(url_for('login'))
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    return render_template('login.html')
+
+#Verify html page functionality
 @app.route('/verify', methods=['POST', 'GET'])
 def verify():
     if request.method == 'POST':
@@ -165,7 +165,38 @@ def verify():
     email = request.args.get('email')  # Get email from URL
     return render_template('verify.html', email=email)
 
-#password reset
+#Verify html page for the dashboard password reset
+@app.route('/verify2', methods=['POST', 'GET'])
+def verify2():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        entered_code = request.form.get('verification_code')
+
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute("SELECT verification_code FROM email_verification WHERE email = %s", (email,))
+            result = cursor.fetchone()
+
+            if result and result[0] == entered_code:
+                # Successful verification
+                cursor.execute("DELETE FROM email_verification WHERE email = %s", (email,))
+                connection.commit()
+                return redirect(url_for('passwordReset'))
+            else:
+                flash("Invalid verification code.")
+                return redirect(url_for('verify2', email=email))
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    email = request.args.get('email')  # Get email from URL
+    return render_template('verify2.html', email=email)
+
+#password reset html page functionality
 @app.route('/passwordReset', methods=['POST', 'GET'])
 def passwordReset():
     
@@ -205,8 +236,68 @@ def passwordReset():
     
     return render_template('passwordReset.html')
 
+#password reset email page functionality
+@app.route('/passwordResetemail', methods=['POST', 'GET'])
+def passwordResetemail():
+    
+    if request.method == 'POST':
+        email = request.form.get('username')
+
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute('SELECT * FROM cs_admin WHERE email = %s', (email,))
+            result = cursor.fetchone()
+
+            if  result is None:
+                flash("The email entered does not have an account.")
+                return(redirect(url_for('passwordResetemail')))        
+
+            # Generate a verification code and store it in the database
+            verification_code = generate_verification_code()
+            send_verification_email(email, verification_code)
+
+            # Store the verification code in a new table
+            cursor.execute("""INSERT INTO email_verification(email, verification_code) VALUES (%s, %s)ON DUPLICATE KEY UPDATE verification_code = %s;
+            """, (email, verification_code, verification_code))
+
+            connection.commit()
+            flash("A verification code has been sent to your email.")
+            return redirect(url_for('verify2', email=email))
+        
+        finally:
+            cursor.close()
+            connection.close()
+        
+    return render_template('passwordResetemail.html')
+
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            # SQL query to get the username and the count of occurrences
+            cursor.execute("""
+                            SELECT email
+                            FROM cs_admin
+                            ORDER BY email asc;
+                            LIMIT 500
+                        """)
+            users = cursor.fetchall()  # Get all events (list of dictionaries)
+
+            # Extract just the emails for displaying
+            emails = [user['email'] for user in users]
+
+        finally:
+            cursor.close()
+            connection.close()
+
+        return render_template('createAccount.html', emails=emails)
+
     if request.method == 'POST' :
 
         email = request.form.get('email')
@@ -270,9 +361,7 @@ def predict():
                 file_path= os.path.join(upload_folder,inputfile.filename)
                 print(f"input path: {file_path}")
                 inputfile.save(file_path)
-                session['file_path'] = file_path
                 
-                print(f"File path stored in session: {session.get('file_path')}")
                            
                 # Check if the file is empty
                 if os.stat(file_path).st_size == 0:
@@ -394,10 +483,63 @@ def ip_to_int(ip):
     except ValueError:
         return None
 
+# Display logs to dashboard
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
+    if request.method == 'GET':
+        # Connect to the database
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
 
-    return render_template('dashboard.html')
+        try:
+            # Fetch all usernames from the event table
+            cursor.execute('SELECT DISTINCT username FROM event LIMIT 500')
+            usernames = cursor.fetchall()  # List of unique usernames
+
+            # Initialize a dictionary to store logs for each user and the count for each user
+            user_logs = {}
+            log_counts = {}
+
+            for user in usernames:
+                username = user['username']
+
+                # Fetch logs and count of logs for each username
+                cursor.execute("""
+                    SELECT COUNT(*) AS log_count, timestamp, geoLat, geoLon, clientIP, eventOutcome 
+                    FROM event 
+                    WHERE username = %s
+                    GROUP BY username, timestamp, geoLat, geoLon, clientIP, eventOutcome
+                    LIMIT 500
+                """, (username,))
+
+                logs = cursor.fetchall()  # List of logs for the current username
+                user_logs[username] = logs
+                log_counts[username] = logs[0]['log_count'] if logs else 0  # Get log count for each username
+                
+        finally:
+            cursor.close()
+            connection.close()
+
+    return render_template('dashboard.html', usernames=usernames, user_logs=user_logs, log_counts=log_counts)
+
+@app.route('/api/points')
+def get_points():
+    if request.method == 'GET':
+        # API endpoint to return points as JSON
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+
+        try:
+            cursor.execute('SELECT username, timestamp, geoLat, geoLon FROM event LIMIT 500')
+            points = cursor.fetchall()
+
+        finally:
+            cursor.close()
+            connection.close()
+
+        # Convert points to a list of dictionaries
+        points_list = [{"coords": [point['geoLat'], point['geoLon']], "label": point['username'], "timestamp": point['timestamp']} for point in points]
+    return jsonify(points_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
