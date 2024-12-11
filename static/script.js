@@ -11,3 +11,12 @@ function hideShow() {
         display = 1;
     }
 }
+
+/*function toggleNav() {
+    var x = document.getElementByID("navbar");
+    if (x.style.display === "block") {
+        x.style.display = "none";
+    } else {
+        x.style.display = "block";
+    }
+}*/
