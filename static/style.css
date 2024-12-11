@@ -1,6 +1,31 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css?family=Work Sans');
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+details {
+    margin-bottom: 10px;
+}
+
+summary {
+    font-weight: bold;
+    cursor: pointer;
+}
+
 header {
     background-color: #1C1D22;
     height: 80px;
@@ -365,6 +390,22 @@ header .button a:hover {
     font-family: 'Nunito';
     font-weight: 900;
     margin-top: 6%;
+    margin-left: 36%;
+    margin-right: 36%;
+    cursor: pointer;
+}
+
+.box__button {
+    width: 100px;
+    height: 35px;
+    background: #E9CC7C;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    font-family: 'Nunito';
+    font-weight: 900;
+    margin-top: 6%;
+    margin-bottom: 6%;
     margin-left: 36%;
     margin-right: 36%;
     cursor: pointer;
