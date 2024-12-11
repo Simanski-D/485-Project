@@ -14,18 +14,15 @@
     <body>
         <!-- Header -->
         <header>
+                    <a href="javascript:void(0);" class="icon" onclick="toggleNav()">
+                        <i class="fa-solid fa-bars fa-xl" style="color: #ffffff;"></i>
+                    </a>
 
-            <button class="openbtn" onclick="openNav()">
-                <i class="fa-solid fa-bars" id="bars"></i>
-            </button>
-            <!--<a href="javascript:void(0);" class="icon" onclick="myFunction()">
-                <i class="fa-solid fa-bars fa-lg" style="color: #ffffff;"></i>
-            </a>-->
-
-            <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
-            <ul>
-                <li><a href="{{ url_for('login')}}">Logout</a></li>
-            </ul>
+                    <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
+                
+                <ul>
+                    <li><a href="{{ url_for('login')}}">Logout</a></li>
+                </ul>
         </header>
 
         <!-- Content -->

@@ -1,22 +1,7 @@
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Manage Accounts</title>
-        <link rel="stylesheet" href="../static/style.css" type="text/css"></linkrel>
-    </head>
-    <body>
-        <header>
-            <button class="openbtn" onclick="openNav()">
-                <i class="fa-solid fa-bars" id="bars"></i>
-            </button>
-            <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
-            <ul>
-                <li><a href="{{ url_for('login')}}">Logout</a></li>
-            </ul> 
-        </header>
+{% extends "base.html" %}
+{% block title %}Manage Account{% endblock %}
 
-        <div class="container">
+{% block content %}
             <!-- Sidebar Navigation -->
             <nav id="navbar">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: white; font-size: 22px; float: left; padding-left: 10px;">&times;</a>
@@ -83,9 +68,7 @@
                 {% endif %}
             </div>
         </div>
-        <footer>
-            <a><p>2024 Cybersecurity Project</p></a>
-        </footer>
+    {% endblock %}
 
         <script>
             document.getElementById("createAccountForm").addEventListener("submit", function(event) {
@@ -112,5 +95,3 @@
                 }
             });
         </script>
-    </body>
-</html>

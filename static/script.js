@@ -1,22 +1,9 @@
-// Expand Information on Dashboard
-var div = document.getElementById('hidden');
-var display = 0;
-
-function hideShow() {
-    if(display === 1) {
-        div.style.display = 'block';
-        display = 0;
+// Expand and Hide Navbar
+function toggleNav() {
+    var navbar = document.getElementById('navbar');
+    if (navbar.style.display === 'none') {
+        navbar.style.display = 'block'; // Show the navbar
     } else {
-        div.style.display = 'none';
-        display = 1;
+        navbar.style.display = 'none'; // Hide the navbar
     }
 }
-
-/*function toggleNav() {
-    var x = document.getElementByID("navbar");
-    if (x.style.display === "block") {
-        x.style.display = "none";
-    } else {
-        x.style.display = "block";
-    }
-}*/
