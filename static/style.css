@@ -355,6 +355,21 @@ header .button a:hover {
     cursor: pointer;
 }
 
+.form-container .verifyButton {
+    width: 100px;
+    height: 35px;
+    background: #E9CC7C;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    font-family: 'Nunito';
+    font-weight: 900;
+    margin-top: 6%;
+    margin-left: 36%;
+    margin-right: 36%;
+    cursor: pointer;
+}
+
 nav ul li a:hover {
     background-color: #396B86;
 }
