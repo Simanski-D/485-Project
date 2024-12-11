@@ -1,29 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css?family=Work Sans');
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-details {
-    margin-bottom: 10px;
-}
-
-summary {
-    font-weight: bold;
-    cursor: pointer;
+/* Header Items */
+.logo-icon {
+    width: 14%;
+    padding-left: 20px;
+    padding-top: 16px;
 }
 
 header {
@@ -36,24 +18,7 @@ header i {
     font-size: 24px;
 }
 
-.logo {
-    color: white;
-    font-size: 24px;
-    font-family: 'Work Sans';
-    padding-left: 10px;
-}
-
-.logo-icon {
-    width: 14%;
-    padding-left: 20px;
-    padding-top: 16px;
-}
-
 header button {
-    display: none;
-}
-
-nav .closebtn {
     display: none;
 }
 
@@ -83,6 +48,10 @@ header ul li a:hover {
     background-color: #396B86;
 }
 
+.right-header-item {
+    padding-right: 20px;
+}
+
 .checkbtn {
     float: left;
     margin: 28px;
@@ -102,6 +71,7 @@ header ul li a:hover {
     display: none;
 }
 
+/* Body/Footer Items */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -118,10 +88,6 @@ footer {
     text-align: center;
     padding: .2rem;
     font-size: 10pt;
-}
-
-.right-header-item {
-    padding-right: 20px;
 }
 
 h2 {
@@ -150,6 +116,8 @@ p, .input {
 
 }
 
+
+/* Manage Account Specifics */
 .createAcc {
     font-family: 'Nunito';
     color: white;
@@ -160,6 +128,11 @@ p, .input {
     margin-top: 15px;
 }
 
+.login-createAcc-header {
+    color: #1C1D22;
+}
+
+/* Navbar Items */
 nav {
     background-color: #264759;
     height: auto;
@@ -190,6 +163,11 @@ nav ul li a:hover {
     background-color: #396B86;
 }
 
+nav .closebtn {
+    display: none;
+}
+
+/* Specialized Containers */
 .container {
     display: flex;
     height: auto;
@@ -286,10 +264,6 @@ h3 .left-container {
     margin: auto;
 }
 
-.login-createAcc-header {
-    color: #1C1D22;
-}
-
 .form-container .input-box {
     width: 100%;
     height: 30px;
@@ -314,6 +288,7 @@ h3 .left-container {
     padding-bottom: 10px;
 }
 
+/* Dashboard Specific Items */
 .event {
     display: block;
     height: auto;
@@ -332,6 +307,22 @@ h3 .left-container {
     font-size: 14px;
     font-weight: 200;
     color: #1C1D22;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
 }
 
 .account-list {
@@ -411,26 +402,30 @@ header .button a:hover {
     cursor: pointer;
 }
 
-nav ul li a:hover {
-    background-color: #396B86;
-}
-
 @media only screen and (max-width: 980px) {
-    .checkbtn {
-        display: block;
-    }
-
     .logo {
         padding-left: 0px;
     }
-
-    .container {
-        display: block;
+    
+    header button {
+        display: inline;
     }
 
     nav {
         position: absolute;
         top: 80px;
+    }
+
+    nav .closebtn {
+        display: inline;
+    }
+
+    .checkbtn {
+        display: block;
+    }
+
+    .container {
+        display: block;
     }
 
     .left-container {
@@ -448,13 +443,5 @@ nav ul li a:hover {
         border-radius: 8px;
         box-shadow: 0px 0px 8px #adadad;
         overflow: hidden;
-    }
-
-    header button {
-        display: inline;
-    }
-
-    nav .closebtn {
-        display: inline;
     }
 }
