@@ -28,6 +28,7 @@
                     {% endwith %}
                 </div>
 
+               <!--form to enter username/password to create an account-->
                 <div class="form-container">
                     <form action="/create_account" method="post">
                         <div class="form-group">
@@ -54,6 +55,8 @@
                     </form>
                 </div>
             </div>
+
+          <!--Jinja2 template for handling flash messages when running app.py...if html is ran on its own shows up as plain text-->
             <div class="right-container">
                 <h3>Accounts</h3>
                 {% if emails %}

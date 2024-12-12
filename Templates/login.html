@@ -1,3 +1,4 @@
+<!--login html for users to access dashboard upon successful submission-->
 <html>
     <head>
         <meta charset="UTF-8">
@@ -7,6 +8,7 @@
         <link rel="icon" type="image/x-icon" href="/static/not-me-logo-01.png">
     </head>
     <body>
+        <!--navbar-->
         <header>
             <a href="javascript:void(0);" class="icon" onclick="toggleNav()">
                 <i class="fa-solid fa-bars fa-xl" style="color: #ffffff;"></i>
@@ -23,6 +25,7 @@
                     <center><h2>Login</h2></center>
                 </div>
 
+                <!--Jinja2 template to handle flash messages when running app.py, will show up as plaintext if just html file ran-->
                 <div class="flash-messages">
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
@@ -35,6 +38,7 @@
                     {% endwith %}
                 </div>
 
+                <!--form for entering username and password-->
                 <div class="form-container">
                     <form action="/" method="post">
                         <div class="form-group">
