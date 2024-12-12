@@ -7,9 +7,9 @@
     </head>
     <body>
         <header>
-            <button class="openbtn" onclick="openNav()">
-                <i class="fa-solid fa-bars" id="bars"></i>
-            </button>
+            <a href="javascript:void(0);" class="icon" onclick="toggleNav()">
+                <i class="fa-solid fa-bars fa-xl" style="color: #ffffff;"></i>
+            </a>
             <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
             <ul>
                 <li><a class = "pwordRe" href = "{{ url_for('passwordResetemail')}}" style = "color:white">Reset Password</a></li>

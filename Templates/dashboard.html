@@ -50,7 +50,7 @@
                 <script src="{{ url_for('static', filename='script.js') }}"></script>
             </div>
         {% else %}
-            <h4>No usernames found.</h4>
+            <h4><a href="{{ url_for('predict')}}">No usernames found. Please click here to upload a file.</a></h4>
         {% endfor %}
     </div>
 
