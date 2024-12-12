@@ -463,7 +463,7 @@ def clean_data(userdf):
 
 def model_predict(userdf):
     predictions = model_prototype.predict(userdf)
-    userdf['prediction_labels'] = np.where(predictions > 0.5, 'Good', 'Bad')
+    userdf['prediction_labels'] = np.where(predictions > 0.5, 'Bad', 'Good')
     return userdf
 
 def process_file(filepath):
