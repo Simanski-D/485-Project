@@ -1,3 +1,5 @@
+#this file is our application, you run this to run our software
+	#dependencies are below
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file, jsonify
 from flask_cors import CORS
 import hashlib
@@ -13,7 +15,7 @@ import pandas as pd
 import tensorflow as tf
 
 app = Flask(__name__)
-CORS(app)
+CORS(app) #allows Leaflet map to appear
 app.secret_key = 'dummy_key'  
 
 #user input setup and model loading
@@ -164,7 +166,7 @@ def verify():
     email = request.args.get('email')  # Get email from URL
     return render_template('verify.html', email=email)
 
-#Verify html page for the dashboard password reset
+#Verify html page for the dashboard password reset...routes to passwordReset.html
 @app.route('/verify2', methods=['POST', 'GET'])
 def verify2():
     if request.method == 'POST':
@@ -235,7 +237,7 @@ def passwordReset():
     
     return render_template('passwordReset.html')
 
-#password reset email page functionality
+#password reset email page functionality...one must enter just email then enter verification (verify2) then enter new password and email in passwordReset
 @app.route('/passwordResetemail', methods=['POST', 'GET'])
 def passwordResetemail():
     
@@ -271,6 +273,7 @@ def passwordResetemail():
         
     return render_template('passwordResetemail.html')
 
+#functionality for our createAccount.html...listed as manage account in our dashboard
 @app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
     if request.method == 'GET':
@@ -300,7 +303,7 @@ def create_account():
     if request.method == 'POST' :
 
         email = request.form.get('email')
-        password = request.form.get('pw_key')
+        password = request.form.get('pw_key') #derived from sha-256 hashing function
         confirm_password = request.form.get('confirm_pw')
         
 
@@ -347,6 +350,7 @@ def create_account():
 
     return render_template('createAccount.html')
 
+#functionality for our html page which allows insertion of a .CSV file to trigger the machine learning model to predict logs
 @app.route('/predict', methods=['GET','POST'])
 def predict():
         if request.method == 'POST' :
@@ -432,7 +436,7 @@ def predict():
             return render_template('predict.html')
         return render_template("predict.html")
 
-#Datacleaning method for user input
+#Datacleaning method for user input (.CSV file)
 def clean_data(userdf):
 	#clean timestamp
 	userdf['timestamp'] = pd.to_datetime(userdf['timestamp'].str.replace(" @ ", " "), format="%b %d, %Y %H:%M:%S.%f")
@@ -522,6 +526,7 @@ def dashboard():
 
     return render_template('dashboard.html', usernames=usernames, user_logs=user_logs, log_counts=log_counts)
 
+#functionality to get geolocation for the Leaflet map
 @app.route('/api/points')
 def get_points():
     if request.method == 'GET':
