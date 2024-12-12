@@ -15,6 +15,7 @@
     <div class="left-container">
         <h3>Event Details</h3>
 
+        <!-- Populate for each username -->
         {% for user in usernames %}
             <div class="event">
                 <div class="shown">
@@ -23,8 +24,10 @@
                 </div>
 
                 <div id="hidden" class="hidden">
+                <!-- Display a line in a table for each log in database -->
                 {% if user_logs[user['username']] %}
                     <table>
+                        <!-- Value Labels -->
                         <tr>
                             <th>Timestamp</th>
                             <th>Client IP</th>
@@ -33,6 +36,7 @@
                             <th>Outcome</th>
                         </tr>
                         {% for log in user_logs[user['username']] %}
+                            <!-- Values -->
                             <tr>
                                 <th>{{ log.timestamp }}</th>
                                 <th>{{ log.clientIP }}</th>
