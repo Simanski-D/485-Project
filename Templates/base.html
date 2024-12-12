@@ -6,9 +6,9 @@
         <title>{% block title %}{% endblock %}</title>
 
         <!-- Link to CSS files -->
-        <link rel="stylesheet" href="../static/style.css" type="text/css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="../static/style.css" type="text/css"> <!-- Project Style Sheet -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome Icon Library -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" /> <!-- Map -->
     </head>
 
     <body>
@@ -19,7 +19,7 @@
                     </a>
 
                     <img class="logo-icon" src="/static/not-me-logo-02.png" alt="not-me-logo">
-                
+                <!-- Links to logout and to Reset Password -->
                 <ul>
                     <li><a href="{{ url_for('login')}}">Logout</a></li>
                     <li><a class = "pwordRe" href = "{{ url_for('passwordResetemail')}}" style = "color:white">Reset Password</a></li>
